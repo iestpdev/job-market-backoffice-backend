@@ -1,6 +1,6 @@
 import { BaseController } from "../../shared/controller-base.js";
 import Student from "../models/student.model.js";
-import { studentSchema } from "./student.validator.js";
+import { studentSchema } from "../../shared/joi-validators.js";
 
 class StudentController extends BaseController {
   async getAll(req, res) {
