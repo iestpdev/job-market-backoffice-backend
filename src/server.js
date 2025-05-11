@@ -7,7 +7,7 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
 
-        this.student_path = '/api/student';
+        this.student_path = '/api/v1/student';
 
         this.connectDB();
         this.middlewares();
