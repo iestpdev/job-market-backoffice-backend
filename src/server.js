@@ -1,17 +1,13 @@
 import express from 'express';
 import db from './config/mysql/mysql.js';
-//import labels from '../labels.js';
-//import loginRoutes from '../routes/login.routes.js';
-//import userRoutes from '../routes/user.routes.js';
+import studentRouter from './modules/students/routes/student.route.js';
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
 
-        // Paths
-        //this.login_path = '/api/login';
-        //this.user_path = '/api/user';
+        this.student_path = '/api/student';
 
         this.connectDB();
         this.middlewares();
@@ -21,7 +17,6 @@ class Server {
     listen() {
         this.app.listen(this.port, () => {
             console.log(`👾 I'M ALIVE => PORT: ${this.port}`);
-            //console.log(labels.LISTEN_SERVER + this.port);
         });
     }
 
@@ -34,8 +29,7 @@ class Server {
     }
 
     routes() {
-        //this.app.use(this.login_path, loginRoutes);
-        //this.app.use(this.user_path, userRoutes);
+        this.app.use(this.student_path, studentRouter);
     }
 }
 
