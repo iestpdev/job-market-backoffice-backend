@@ -31,15 +31,8 @@ class StudentController extends BaseController {
   async create(req, res) {
     try {
       const { error: validationError, value } = studentSchema.validate(req.body);
-      if (validationError) return res.status(400).json({ message: "Validación fallida", details: validationError.details });
-
-      let curriculumUrl = null;
-
-      if (req.file) {
-        curriculumUrl = await uploadFileToSupabase(
-          process.env.SUPABASE_BUCKET_FILES,
-          req.file
-        );
+      if (validationError) {
+        return res.status(400).json({ message: "Validación fallida", details: validationError.details });
       }
 
       const student = new Student(
@@ -50,11 +43,24 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
-        curriculumUrl
+        null
       );
 
       const result = await student.create(this.getDbPool());
-      res.status(201).json({ message: "Estudiante creado", id: result.insertId });
+      const newId = result.insertId;
+
+      if (req.file) {
+        const curriculumUrl = await uploadFileToSupabase(
+          process.env.SUPABASE_BUCKET_FILES,
+          req.file,
+          "students",
+          newId
+        );
+
+        await Student.updateCurriculum(this.getDbPool(), newId, curriculumUrl);
+      }
+
+      res.status(201).json({ message: "Estudiante creado", id: newId });
     } catch (error) {
       this.handleError(res, 500, error, "Error al crear el estudiante");
     }
@@ -82,7 +88,9 @@ class StudentController extends BaseController {
       if (req.file) {
         value.curriculum = await uploadFileToSupabase(
           process.env.SUPABASE_BUCKET_FILES,
-          req.file
+          req.file,
+          'students',
+          id
         );
       }
 

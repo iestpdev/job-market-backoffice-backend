@@ -91,6 +91,14 @@ class Student extends ModelBase {
     );
     return result;
   }
+
+  static async updateCurriculum(conexion, id, curriculumUrl) {
+    const [result] = await conexion.execute(
+      `UPDATE ALUMNOS SET CURRICULUM = ? WHERE ID = ?`,
+      [curriculumUrl, id]
+    );
+    return result;
+  }
 }
 
 export default Student;

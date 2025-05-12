@@ -1,10 +1,10 @@
 import supabase from "./supabase.js";
 
-async function uploadFileToSupabase(bucket, file) {
+async function uploadFileToSupabase(bucket, file, entity, entityId) {
   if (!file) return null;
 
   const fileExt = file.originalname.split(".").pop();
-  const fileName = `cv_${Date.now()}.${fileExt}`;
+  const fileName = `${entity}/${entityId}/cv_${Date.now()}.${fileExt}`;
 
   const { error: uploadError } = await supabase.storage
     .from(bucket)
