@@ -1,10 +1,11 @@
 import { Router } from "express";
 import studentController from "../controllers/student.controller.js";
+import upload from "../../../middleware/upload.js";
 
 const studentRouter = Router();
 studentRouter.get("/", (req, res) => studentController.getAll(req, res));
 studentRouter.get("/:id", (req, res) => studentController.getById(req, res));
-studentRouter.post("/", (req, res) => studentController.create(req, res));
+studentRouter.post("/", upload.single("curriculum") ,(req, res) => studentController.create(req, res));
 studentRouter.patch("/:id", (req, res) => studentController.update(req, res));
 studentRouter.delete("/:id", (req, res) => studentController.deleteById(req, res));
 

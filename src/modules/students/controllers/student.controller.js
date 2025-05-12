@@ -1,6 +1,7 @@
 import { BaseController } from "../../shared/controller-base.js";
 import Student from "../models/student.model.js";
-import { studentSchema } from "../../shared/joi-validators.js";
+import { studentSchema } from "../validators/student.validator.js";
+import supabase from "../../../config/supabase/supabase.js";
 
 class StudentController extends BaseController {
   async getAll(req, res) {
@@ -17,7 +18,8 @@ class StudentController extends BaseController {
       const id = parseInt(req.params.id);
       const student = await Student.getById(this.getDbPool(), id);
 
-      if (!student) return res.status(404).json({ message: "Estudiante no encontrado" });
+      if (!student)
+        return res.status(404).json({ message: "Estudiante no encontrado" });
       res.json(student);
     } catch (error) {
       this.handleError(res, 500, error, "Error al obtener el estudiante");
@@ -26,24 +28,65 @@ class StudentController extends BaseController {
 
   async create(req, res) {
     try {
-      const { error, value } = studentSchema.validate(req.body);
-      if (error) return res.status(400).json({ message: "Validación fallida", details: error.details });
-      
-      const { apellidos, nombres, genero, fechNac, tipoDOI, numDOI, curriculum } = value;
-      const student = new Student(null, apellidos, nombres, genero, fechNac, tipoDOI, numDOI, curriculum);
+      const { error: validationError, value } = studentSchema.validate(
+        req.body
+      );
+      if (validationError)
+        return res
+          .status(400)
+          .json({
+            message: "Validación fallida",
+            details: validationError.details,
+          });
+
+      let curriculumUrl = null;
+
+      if (req.file) {
+        const fileExt = req.file.originalname.split(".").pop();
+        const fileName = `cv_${Date.now()}.${fileExt}`;
+        const { data, error: uploadError } = await supabase.storage
+          .from(process.env.SUPABASE_BUCKET)
+          .upload(fileName, req.file.buffer, {
+            contentType: req.file.mimetype,
+            upsert: true,
+          });
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabase.storage
+          .from(process.env.SUPABASE_BUCKET)
+          .getPublicUrl(fileName);
+
+        curriculumUrl = publicUrlData.publicUrl;
+      }
+
+      const student = new Student(
+        null,
+        value.apellidos,
+        value.nombres,
+        value.genero,
+        value.fechNac,
+        value.tipoDOI,
+        value.numDOI,
+        curriculumUrl
+      );
+
       const result = await student.create(this.getDbPool());
 
-      res.status(201).json({ message: "Estudiante creado", id: result.insertId });
+      res
+        .status(201)
+        .json({ message: "Estudiante creado", id: result.insertId });
     } catch (error) {
       this.handleError(res, 500, error, "Error al crear el estudiante");
     }
   }
 
-   async update(req, res) {
+  async update(req, res) {
     try {
       const id = parseInt(req.params.id);
       const existingStudent = await Student.getById(this.getDbPool(), id);
-      if (!existingStudent) return res.status(404).json({ message: "Estudiante no encontrado" });
+      if (!existingStudent)
+        return res.status(404).json({ message: "Estudiante no encontrado" });
 
       const mergedData = {
         apellidos: req.body.apellidos ?? existingStudent.APELLIDOS,
@@ -56,10 +99,30 @@ class StudentController extends BaseController {
       };
 
       const { error, value } = studentSchema.validate(mergedData);
-      if (error) return res.status(400).json({ message: "Validación fallida", details: error.details });
-      
-      const { apellidos, nombres, genero, fechNac, tipoDOI, numDOI, curriculum } = value;
-      const student = new Student(id, apellidos, nombres, genero, fechNac, tipoDOI, numDOI, curriculum);
+      if (error)
+        return res
+          .status(400)
+          .json({ message: "Validación fallida", details: error.details });
+
+      const {
+        apellidos,
+        nombres,
+        genero,
+        fechNac,
+        tipoDOI,
+        numDOI,
+        curriculum,
+      } = value;
+      const student = new Student(
+        id,
+        apellidos,
+        nombres,
+        genero,
+        fechNac,
+        tipoDOI,
+        numDOI,
+        curriculum
+      );
       const result = await student.update(this.getDbPool());
 
       if (result.affectedRows <= 0) return res.sendStatus(204);
@@ -68,15 +131,19 @@ class StudentController extends BaseController {
       this.handleError(res, 500, error, "Error al actualizar el estudiante");
     }
   }
-  
+
   async deleteById(req, res) {
     try {
       const id = parseInt(req.params.id);
       const student = await Student.getById(this.getDbPool(), id);
-      
-      if (!student)  return res.status(404).json({ message: "Estudiante no encontrado" });
-      const result =  await Student.softDelete(this.getDbPool(), id);
-      if (result.affectedRows <= 0) return res.status(404).json({ message: "error al eliminar Estudiante" });
+
+      if (!student)
+        return res.status(404).json({ message: "Estudiante no encontrado" });
+      const result = await Student.softDelete(this.getDbPool(), id);
+      if (result.affectedRows <= 0)
+        return res
+          .status(404)
+          .json({ message: "error al eliminar Estudiante" });
 
       res.json({ message: "Estudiante eliminado (soft delete)" });
     } catch (error) {
