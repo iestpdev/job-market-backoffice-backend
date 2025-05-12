@@ -34,7 +34,7 @@ class Student extends ModelBase {
       "SELECT * FROM ALUMNOS WHERE ID = ? AND deleted_at IS NULL",
       [id]
     );
-    return result[0]; 
+    return result[0];
   }
 
   async create(conexion) {
