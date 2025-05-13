@@ -34,7 +34,7 @@ class Student extends ModelBase {
       "SELECT * FROM ALUMNOS WHERE ID = ? AND deleted_at IS NULL",
       [id]
     );
-    return result[0]; 
+    return result[0];
   }
 
   async create(conexion) {
@@ -88,6 +88,14 @@ class Student extends ModelBase {
     const [result] = await conexion.query(
       `UPDATE ALUMNOS SET deleted_at = ? WHERE ID = ? AND deleted_at IS NULL`,
       [deleted_at, id]
+    );
+    return result;
+  }
+
+  static async updateCurriculum(conexion, id, curriculumUrl) {
+    const [result] = await conexion.execute(
+      `UPDATE ALUMNOS SET CURRICULUM = ? WHERE ID = ?`,
+      [curriculumUrl, id]
     );
     return result;
   }
