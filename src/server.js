@@ -1,6 +1,7 @@
 import express from 'express';
 import db from './config/mysql/mysql.js';
 import studentRouter from './modules/students/routes/student.route.js';
+import companyRouter from './modules/companies/routes/company.route.js';
 
 class Server {
     constructor() {
@@ -8,6 +9,7 @@ class Server {
         this.port = process.env.PORT;
 
         this.student_path = '/api/v1/student';
+        this.company_path = '/api/v1/company';
 
         this.connectDB();
         this.middlewares();
@@ -30,6 +32,7 @@ class Server {
 
     routes() {
         this.app.use(this.student_path, studentRouter);
+        this.app.use(this.company_path, companyRouter);
     }
 }
 

@@ -1,4 +1,4 @@
-import ModelBase from "../../shared/model-base";
+import ModelBase from "../../shared/model-base.js";
 
 class Company extends ModelBase {
     constructor(
@@ -17,8 +17,7 @@ class Company extends ModelBase {
         correo2 = null,
         contacto3 = null,
         telefono3 = null,
-        correo3 = null,
-        isActive = true
+        correo3 = null
     ) {
         super();
         this.id = id;
@@ -37,19 +36,19 @@ class Company extends ModelBase {
         this.contacto3 = contacto3;
         this.telefono3 = telefono3;
         this.correo3 = correo3;
-        this.isActive = isActive;
+        this.isActive = true;
     }
 
     static async getAll(conexion) {
         const [result] = await conexion.query(
-            "SELECT * FROM EMPRESA WHERE deleted_at IS NULL"
+            "SELECT * FROM EMPRESAS WHERE deleted_at IS NULL"
         );
         return result;
     }
 
     static async getById(conexion, id) {
         const [result] = await conexion.query(
-            "SELECT * FROM EMPRESA WHERE ID = ? AND deleted_at IS NULL",
+            "SELECT * FROM EMPRESAS WHERE ID = ? AND deleted_at IS NULL",
             [id]
         );
         return result[0];
@@ -61,14 +60,14 @@ class Company extends ModelBase {
         this.updated_at = now;
 
         const [result] = await conexion.query(
-            `INSERT INTO EMPRESA 
-      (
-        RAZON_SOCIAL, RUC, LOGO, DIRECCION1, DIRECCION2, RUBRO,
-        CONTACTO1, TELEFONO1, CORREO1,
-        CONTACTO2, TELEFONO2, CORREO2,
-        CONTACTO3, TELEFONO3, CORREO3,
-        is_active, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO EMPRESAS 
+            (
+                RAZON_SOCIAL, RUC, LOGO, DIRECCION1, DIRECCION2, RUBRO,
+                CONTACTO1, TELEFONO1, CORREO1,
+                CONTACTO2, TELEFONO2, CORREO2,
+                CONTACTO3, TELEFONO3, CORREO3,
+                is_active, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 this.razonSocial,
                 this.ruc,
@@ -91,13 +90,13 @@ class Company extends ModelBase {
         this.updated_at = new Date();
 
         const [result] = await conexion.query(
-            `UPDATE EMPRESA SET 
-        RAZON_SOCIAL = ?, RUC = ?, LOGO = ?, DIRECCION1 = ?, DIRECCION2 = ?, RUBRO = ?,
-        CONTACTO1 = ?, TELEFONO1 = ?, CORREO1 = ?,
-        CONTACTO2 = ?, TELEFONO2 = ?, CORREO2 = ?,
-        CONTACTO3 = ?, TELEFONO3 = ?, CORREO3 = ?,
-        is_active = ?, updated_at = ?
-      WHERE ID = ? AND deleted_at IS NULL`,
+            `UPDATE EMPRESAS SET 
+            RAZON_SOCIAL = ?, RUC = ?, LOGO = ?, DIRECCION1 = ?, DIRECCION2 = ?, RUBRO = ?,
+            CONTACTO1 = ?, TELEFONO1 = ?, CORREO1 = ?,
+            CONTACTO2 = ?, TELEFONO2 = ?, CORREO2 = ?,
+            CONTACTO3 = ?, TELEFONO3 = ?, CORREO3 = ?,
+            updated_at = ?
+            WHERE ID = ? AND deleted_at IS NULL`,
             [
                 this.razonSocial,
                 this.ruc,
@@ -107,7 +106,6 @@ class Company extends ModelBase {
                 this.contacto1, this.telefono1, this.correo1,
                 this.contacto2, this.telefono2, this.correo2,
                 this.contacto3, this.telefono3, this.correo3,
-                this.isActive,
                 this.updated_at,
                 this.id
             ]
@@ -118,7 +116,7 @@ class Company extends ModelBase {
     static async softDelete(conexion, id) {
         const deleted_at = new Date();
         const [result] = await conexion.query(
-            `UPDATE EMPRESA SET deleted_at = ? WHERE ID = ? AND is_active = 0 AND deleted_at IS NULL`,
+            `UPDATE EMPRESAS SET deleted_at = ? WHERE ID = ? AND is_active = 0 AND deleted_at IS NULL`,
             [deleted_at, id]
         );
         return result;
@@ -126,8 +124,8 @@ class Company extends ModelBase {
 
     static async updateLogo(conexion, id, logoUrl) {
         const [result] = await conexion.query(
-            `UPDATE EMPRESA SET LOGO = ?, updated_at = ? WHERE ID = ? AND deleted_at IS NULL`,
-            [logoUrl, new Date(), id]
+            `UPDATE EMPRESAS SET LOGO = ? WHERE ID = ? AND deleted_at IS NULL`,
+            [logoUrl, id]
         );
         return result;
     }
@@ -135,7 +133,7 @@ class Company extends ModelBase {
     static async activate(conexion, id) {
         const updated_at = new Date();
         const [result] = await conexion.query(
-            `UPDATE EMPRESA SET is_active = 1, updated_at = ? WHERE ID = ? AND deleted_at IS NULL`,
+            `UPDATE EMPRESAS SET is_active = 1, updated_at = ? WHERE ID = ? AND deleted_at IS NULL`,
             [updated_at, id]
         );
         return result;
@@ -144,7 +142,7 @@ class Company extends ModelBase {
     static async deactivate(conexion, id) {
         const updated_at = new Date();
         const [result] = await conexion.query(
-            `UPDATE EMPRESA SET is_active = 0, updated_at = ? WHERE ID = ? AND deleted_at IS NULL`,
+            `UPDATE EMPRESAS SET is_active = 0, updated_at = ? WHERE ID = ? AND deleted_at IS NULL`,
             [updated_at, id]
         );
         return result;

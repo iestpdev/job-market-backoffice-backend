@@ -20,8 +20,7 @@ class StudentController extends BaseController {
       const id = parseInt(req.params.id);
       const student = await Student.getById(this.getDbPool(), id);
 
-      if (!student)
-        return res.status(404).json({ message: "Estudiante no encontrado" });
+      if (!student) return res.status(404).json({ message: "Estudiante no encontrado" });
       res.json(student);
     } catch (error) {
       this.handleError(res, 500, error, "Error al obtener el estudiante");
@@ -31,9 +30,7 @@ class StudentController extends BaseController {
   async create(req, res) {
     try {
       const { error: validationError, value } = studentSchema.validate(req.body);
-      if (validationError) {
-        return res.status(400).json({ message: "Validación fallida", details: validationError.details });
-      }
+      if (validationError) return res.status(400).json({ message: "Validación fallida", details: validationError.details });
 
       const student = new Student(
         null,
