@@ -38,6 +38,8 @@ class Offer extends ModelBase {
         this.telefono = telefono
     }
 
+    /*TODO: getByCompanyId */
+    
     static async getAll(conexion) {
         const [result] = await conexion.query(
             "SELECT * FROM OFERTAS WHERE deleted_at IS NULL"

@@ -1,8 +1,4 @@
-INSERT INTO ALUMNOS (APELLIDOS, NOMBRES, GENERO, FECH_NACIMIENTO, TIPO_DOI, NUM_DOI, CURRICULUM, created_at, updated_at) 
-VALUES ('Garcia', 'Juan', 'M', '1995-03-12', 'DNI', '12345678', 'Ingeniero en Sistemas', now(), now()), 
-       ('Martinez', 'Maria', 'F', '1998-07-22', 'CE', '87654321', 'Licenciada en Educación', now(), now()), 
-       ('Lopez', 'Carlos', 'M', '1990-11-05', 'DNI', '56789012', 'Desarrollador de Software', now(), now());
-       
+   
 INSERT INTO EMPRESAS (RAZON_SOCIAL, RUC, LOGO, DIRECCION1, DIRECCION2, RUBRO, CONTACTO1, TELEFONO1, CORREO1, CONTACTO2, TELEFONO2, CORREO2, CONTACTO3, TELEFONO3, CORREO3, is_active, created_at, updated_at) VALUES
 (
     'Tecnologías Innovadoras S.A.', 
