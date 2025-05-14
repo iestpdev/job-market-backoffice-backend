@@ -16,7 +16,7 @@ const upload = multer({
     if (allowedMimeTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Tipo de archivo no permitido. Solo se permiten imágenes (.jpg, .png, .webp) y PDFs.'));
+      cb(new Error('Tipo de archivo no permitido.'));
     }
   }
 });
