@@ -1,7 +1,6 @@
 import Joi from 'joi';
 
 export const userSchema = Joi.object({
-    tipo: Joi.string().valid('STUDENT', 'COMPANY', 'ADMIN').required(),
     username: Joi.string().min(8).max(18).required(),
     userpass: Joi.string()
         .min(8)

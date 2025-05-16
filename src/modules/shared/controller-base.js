@@ -5,7 +5,7 @@ export class BaseController {
     return db.getPool();
   }
   
-  handleError(res,statusCode, err, customMessage = "error in operation") {
+  handleError(res, statusCode, err, customMessage = "error in operation") {
     console.log(err)
     res.status(statusCode).json({
       error: customMessage,
