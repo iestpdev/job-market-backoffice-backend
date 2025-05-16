@@ -4,6 +4,7 @@ import studentRouter from './modules/students/routes/student.route.js';
 import companyRouter from './modules/companies/routes/company.route.js';
 import offerRouter from './modules/offers/routes/offer.route.js';
 import candidacyRouter from './modules/candidacies/routes/candidacy.route.js';
+import userRouter from './modules/users/routes/user.route.js';
 
 class Server {
     constructor() {
@@ -14,6 +15,7 @@ class Server {
         this.company_path = '/api/v1/company';
         this.offer_path = '/api/v1/offer';
         this.candidacy_path = '/api/v1/candidacy';
+        this.user_path = '/api/v1/user';
 
         this.connectDB();
         this.middlewares();
@@ -39,6 +41,7 @@ class Server {
         this.app.use(this.company_path, companyRouter);
         this.app.use(this.offer_path, offerRouter);
         this.app.use(this.candidacy_path, candidacyRouter);
+        this.app.use(this.user_path, userRouter);
     }
 }
 
