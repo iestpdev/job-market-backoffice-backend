@@ -1,5 +1,6 @@
 import db from "../../config/mysql/mysql.js";
 
+// TODO: cambiar el nombre de la clase por ControllerBase
 export class BaseController {
   getDbPool() {
     return db.getPool();
