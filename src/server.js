@@ -1,10 +1,13 @@
 import express from 'express';
+import morgan from 'morgan';
+import corsMiddleware from './middleware/cors/cors.js';
 import db from './config/mysql/mysql.js';
 import studentRouter from './modules/students/routes/student.route.js';
 import companyRouter from './modules/companies/routes/company.route.js';
 import offerRouter from './modules/offers/routes/offer.route.js';
 import candidacyRouter from './modules/candidacies/routes/candidacy.route.js';
 import userRouter from './modules/users/routes/user.route.js';
+import authRouter from './modules/auth/routes/auth.route.js';
 
 class Server {
     constructor() {
@@ -16,10 +19,15 @@ class Server {
         this.offer_path = '/api/v1/offer';
         this.candidacy_path = '/api/v1/candidacy';
         this.user_path = '/api/v1/user';
+        this.auth_path = '/api/v1/auth';
 
         this.connectDB();
         this.middlewares();
         this.routes();
+        // TODO: Hacer un README para la documentación de como levantar el proyecto
+        // TODO: Hacer una documentación de la api con swagger
+        // TODO: Pruebas unitarias con Jest (devDependecies)
+        // TODO: Checkear la logica de todos los updates (basarse en el update de user/controller)
     }
 
     listen() {
@@ -34,6 +42,8 @@ class Server {
 
     middlewares() {
         this.app.use(express.json());
+        this.app.use(corsMiddleware);
+        this.app.use(morgan('tiny'));
     }
 
     routes() {
@@ -42,6 +52,7 @@ class Server {
         this.app.use(this.offer_path, offerRouter);
         this.app.use(this.candidacy_path, candidacyRouter);
         this.app.use(this.user_path, userRouter);
+        this.app.use(this.auth_path, authRouter);
     }
 }
 

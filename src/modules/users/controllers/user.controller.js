@@ -36,12 +36,11 @@ class UserController extends BaseController {
             const hashedPassword = await bcrypt.hash(value.userpass, 10);
             const user = new User(
                 null,
-                value.tipo,
+                (value.companyId) ? 'COMPANY' : (value.studentId) ? 'STUDENT' : 'ADMIN',
                 value.username,
                 hashedPassword,
                 value.companyId,
                 value.studentId,
-                value.isActive
             );
 
             const result = await user.create(this.getDbPool());
@@ -59,31 +58,30 @@ class UserController extends BaseController {
             const existingUser = await User.getById(this.getDbPool(), id);
             if (!existingUser) return res.status(404).json({ message: "Usuario no encontrado" });
 
-            const mergedData = {
-                tipo: req.body?.tipo || existingUser.TIPO,
-                username: req.body?.username || existingUser.USERNAME,
-                userpass: req.body?.userpass || existingUser.USERPASS,
-                companyId: req.body?.companyId ?? existingUser.EMPRESA_ID,
-                studentId: req.body?.studentId ?? existingUser.ALUMNO_ID,
-                isActive: req.body?.isActive ?? !!existingUser.is_active
-            };
+            const { error } = userSchema.validate(req.body, { abortEarly: false });
+            if (error) return res.status(400).json({ message: "Validación fallida", details: error.details.map(d => d.message) });
 
-            if (req.body?.userpass) mergedData.userpass = await bcrypt.hash(req.body.userpass, 10);
+            const current = existingUser;
+            const {
+                username = current.USERNAME,
+                userpass = current.USERPASS,
+                companyId = current.EMPRESA_ID,
+                studentId = current.ALUMNO_ID,
+            } = req.body;
 
-            const { error, value } = userSchema.validate(mergedData);
-            if (error) return res.status(400).json({ message: "Validación fallida", details: error.details });
-
-            const usernameExists = await User.isUsernameTaken(this.getDbPool(), value.username, id);
+            const usernameExists = await User.isUsernameTaken(this.getDbPool(), username, id);
             if (usernameExists) return res.status(400).json({ message: "El nombre de usuario ya está en uso por otro usuario" });
+
+            let newUserPass;
+            if (userpass) newUserPass = await bcrypt.hash(userpass, 10);
 
             const user = new User(
                 id,
-                value.tipo,
-                value.username,
-                value.userpass,
-                value.companyId,
-                value.studentId,
-                value.isActive
+                (companyId) ? 'COMPANY' : (studentId) ? 'STUDENT' : 'ADMIN',
+                username,
+                newUserPass,
+                companyId,
+                studentId,
             );
 
             const result = await user.update(this.getDbPool());
