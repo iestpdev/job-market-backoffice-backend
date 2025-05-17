@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import jwtConfig from '../../../config/jwt/jwt.js';
+import jwtConfig from '../../../middleware/jwt/jwt.js';
 
 export async function login(conexion, username, password) {
   const [user] = await conexion.query("SELECT * FROM USUARIOS WHERE USERNAME = ? AND deleted_at IS NULL", [username]);

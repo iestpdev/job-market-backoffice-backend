@@ -1,6 +1,6 @@
 import { Router } from "express";
 import studentController from "../controllers/student.controller.js";
-import upload from "../../../middleware/upload.js";
+import upload from "../../../middleware/multer/multer.js";
 
 const studentRouter = Router();
 studentRouter.get("/", (req, res) => studentController.getAll(req, res));

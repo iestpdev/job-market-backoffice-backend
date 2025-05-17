@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import jwtConfig from '../../config/jwt/jwt.js';
+import jwtConfig from './jwt.js';
 
 export function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;

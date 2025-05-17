@@ -1,6 +1,6 @@
 import { Router } from "express";
 import companyController from "../controllers/company.controller.js";
-import upload from "../../../middleware/upload.js";
+import upload from "../../../middleware/multer/multer.js";
 
 const companyRouter = Router();
 companyRouter.get("/", (req, res) => companyController.getAll(req, res));

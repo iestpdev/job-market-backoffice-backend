@@ -1,4 +1,6 @@
 import express from 'express';
+import morgan from 'morgan';
+import corsMiddleware from './middleware/cors/cors.js';
 import db from './config/mysql/mysql.js';
 import studentRouter from './modules/students/routes/student.route.js';
 import companyRouter from './modules/companies/routes/company.route.js';
@@ -22,6 +24,9 @@ class Server {
         this.connectDB();
         this.middlewares();
         this.routes();
+        // TODO: Hacer un README para la documentación de como levantar el proyecto
+        // TODO: Hacer una documentación de la api con swagger
+        // TODO: Pruebas unitarias con Jest (devDependecies)
     }
 
     listen() {
@@ -36,6 +41,8 @@ class Server {
 
     middlewares() {
         this.app.use(express.json());
+        this.app.use(corsMiddleware);
+        this.app.use(morgan('tiny'));
     }
 
     routes() {
