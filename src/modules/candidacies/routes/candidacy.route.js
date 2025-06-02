@@ -12,6 +12,11 @@ candidacyRouter.get("/",
     authorizeRoles('ADMIN'),
      (req, res) => candidacyController.getAll(req, res));
 
+candidacyRouter.get("/get-all-by-company-id/:id",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY'),
+    (req, res) => candidacyController.getAllByCompanyId(req, res));
+
 candidacyRouter.get("/:id",
     verifyToken,
     authorizeRoles('ADMIN'),

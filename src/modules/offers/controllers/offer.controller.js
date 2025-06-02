@@ -12,6 +12,16 @@ class OfferController extends BaseController {
     }
   }
 
+  async getAllByCompanyId(req, res) {
+    try {
+      const companyId = parseInt(req.params.companyId);
+      const offers = await Offer.getAllByCompanyId(this.getDbPool(), companyId);
+      res.json(offers);
+    } catch (error) {
+      this.handleError(res, 500, error, "Error al obtener las ofertas por companyId");
+    }
+  }
+
   async getById(req, res) {
     try {
       const id = parseInt(req.params.id);

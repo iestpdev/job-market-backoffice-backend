@@ -14,6 +14,16 @@ class CandidacyController extends BaseController {
         }
     }
 
+    async getAllByCompanyId(req, res){
+        try{
+            const companyId = parseInt(req.params.id);
+            const candidacies = await Candidacy.getAllByCompanyId(this.getDbPool(), companyId);
+            res.json(candidacies);
+        }catch(error){
+            this.handleError(res, 500, error, "Error al obtener las postulaciones por empresaId");
+        }
+    }
+
     async getById(req, res) {
         try {
             const id = parseInt(req.params.id);

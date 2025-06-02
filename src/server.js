@@ -27,7 +27,7 @@ class Server {
         // TODO: Hacer un README para la documentación de como levantar el proyecto
         // TODO: Hacer una documentación de la api con swagger
         // TODO: Pruebas unitarias con Jest (devDependecies)
-        // TODO: Checkear la logica de todos los updates (basarse en el update de user/controller)
+        // TODO: Checkear la logica de todos los updates (basarse en el update de user/controller) o de Company/Controller
     }
 
     listen() {

@@ -14,7 +14,7 @@ companyRouter.get("/",
 
 companyRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => companyController.getById(req, res));
 
 companyRouter.post("/",
@@ -25,7 +25,7 @@ companyRouter.post("/",
 
 companyRouter.patch("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     upload.single("logo"), 
     (req, res) => companyController.update(req, res));
 

@@ -13,12 +13,12 @@ studentRouter.get("/",
 
 studentRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'), 
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'), 
     (req, res) => studentController.getById(req, res));
 
 studentRouter.post("/",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'STUDENT'),
     upload.single("curriculum"),
     (req, res) => studentController.create(req, res));
 

@@ -38,11 +38,17 @@ class Offer extends ModelBase {
         this.telefono = telefono
     }
 
-    /*TODO: getByCompanyId */
-    
     static async getAll(conexion) {
+        const [result] = await conexion.query( 
+            "SELECT * FROM OFERTAS WHERE deleted_at IS NULL ORDER BY created_at DESC"
+        );
+        return result;
+    }
+
+    static async getAllByCompanyId(conexion, companyId){
         const [result] = await conexion.query(
-            "SELECT * FROM OFERTAS WHERE deleted_at IS NULL"
+            "SELECT * FROM OFERTAS WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
+            [companyId]
         );
         return result;
     }

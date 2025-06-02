@@ -7,17 +7,23 @@ const offerRouter = Router();
 
 offerRouter.get("/",
     verifyToken,
-    authorizeRoles('ADMIN'), 
+    authorizeRoles('ADMIN', 'STUDENT'), 
     (req, res) => offerController.getAll(req, res));
+
 
 offerRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'),
     (req, res) => offerController.getById(req, res));
+
+offerRouter.get("/get-all-by-company-id/:companyId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY'),
+    (req, res) => offerController.getAllByCompanyId(req, res));
 
 offerRouter.post("/",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => offerController.create(req, res));
 
 offerRouter.patch("/:id",

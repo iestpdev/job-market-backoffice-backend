@@ -14,11 +14,18 @@ export async function login(conexion, username, password) {
     {
       id: user[0].ID,
       tipo: user[0].TIPO,
-      username: user[0].USERNAME
+      companyId: user[0].EMPRESA_ID,
+      studentId: user[0].ALUMNO_ID,
     },
     jwtConfig.secret,
     { expiresIn: jwtConfig.expiresIn }
   );
 
-  return { token, user: { id: user[0].ID, tipo: user[0].TIPO, username: user[0].USERNAME } };
+  return { token, user: { 
+    id: user[0].ID, 
+    tipo: user[0].TIPO, 
+    username: user[0].USERNAME, 
+    companyId: user[0].EMPRESA_ID,
+    studentId: user[0].ALUMNO_ID 
+  }};
 }

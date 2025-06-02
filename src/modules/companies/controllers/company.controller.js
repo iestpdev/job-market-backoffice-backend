@@ -74,21 +74,33 @@ class CompanyController extends BaseController {
             const existingCompany = await Company.getById(this.getDbPool(), id);
             if (!existingCompany) return res.status(404).json({ message: "Empresa no encontrada" });
 
+            const currenDataNulleable = existingCompany;
+            const {
+                direccion2 = currenDataNulleable.DIRECCION2,
+                contacto2 = currenDataNulleable.CONTACTO2,
+                telefono2 = currenDataNulleable.TELEFONO2,
+                correo2 = currenDataNulleable.CORREO2,
+                contacto3 = currenDataNulleable.CONTACTO3,
+                telefono3 = currenDataNulleable.TELEFONO3,
+                correo3 = currenDataNulleable.CORREO3,
+            } = req.body;
+            console.log(contacto2)
+
             const mergedData = {
                 razonSocial: req.body?.razonSocial || existingCompany.RAZON_SOCIAL,
                 ruc: req.body?.ruc || existingCompany.RUC,
                 direccion1: req.body?.direccion1 || existingCompany.DIRECCION1,
-                direccion2: req.body?.direccion2 || existingCompany.DIRECCION2,
+                direccion2: direccion2,
                 rubro: req.body?.rubro || existingCompany.RUBRO,
                 contacto1: req.body?.contacto1 || existingCompany.CONTACTO1,
                 telefono1: req.body?.telefono1 || existingCompany.TELEFONO1,
                 correo1: req.body?.correo1 || existingCompany.CORREO1,
-                contacto2: req.body?.contacto2 || existingCompany.CONTACTO2,
-                telefono2: req.body?.telefono2 || existingCompany.TELEFONO2,
-                correo2: req.body?.correo2 || existingCompany.CORREO2,
-                contacto3: req.body?.contacto3 || existingCompany.CONTACTO3,
-                telefono3: req.body?.telefono3 || existingCompany.TELEFONO3,
-                correo3: req.body?.correo3 || existingCompany.CORREO3,
+                contacto2: contacto2,
+                telefono2: telefono2,
+                correo2: correo2,
+                contacto3: contacto3,
+                telefono3: telefono3,
+                correo3: correo3,
             };
 
             const { error, value } = companySchema.validate(mergedData);
@@ -137,7 +149,7 @@ class CompanyController extends BaseController {
             const company = await Company.getById(this.getDbPool(), id);
             if (!company) return res.status(404).json({ message: "Empresa no encontrada" });
             if (company.is_active) return res.status(400).json({ message: "La empresa aún sigue activa y no puede ser eliminada" });
-        
+
 
             const result = await Company.softDelete(this.getDbPool(), id);
             if (result.affectedRows <= 0) return res.status(404).json({ message: "Error al eliminar empresa" });
