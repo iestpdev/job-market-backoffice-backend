@@ -40,14 +40,14 @@ class Offer extends ModelBase {
 
     static async getAll(conexion) {
         const [result] = await conexion.query( 
-            "SELECT * FROM OFERTAS WHERE deleted_at IS NULL ORDER BY created_at DESC"
+            "SELECT * FROM VIEW_OFERTAS_CON_INFO_EMPRESAS WHERE deleted_at IS NULL ORDER BY created_at DESC"
         );
         return result;
     }
 
     static async getAllByCompanyId(conexion, companyId){
         const [result] = await conexion.query(
-            "SELECT * FROM OFERTAS WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
+            "SELECT * FROM VIEW_OFERTAS_CON_INFO_EMPRESAS WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
             [companyId]
         );
         return result;
@@ -55,7 +55,7 @@ class Offer extends ModelBase {
 
     static async getById(conexion, id) {
         const [result] = await conexion.query(
-            "SELECT * FROM OFERTAS WHERE ID = ? AND deleted_at IS NULL",
+            "SELECT * FROM VIEW_OFERTAS_CON_INFO_EMPRESAS WHERE ID = ? AND deleted_at IS NULL",
             [id]
         );
         return result[0];
