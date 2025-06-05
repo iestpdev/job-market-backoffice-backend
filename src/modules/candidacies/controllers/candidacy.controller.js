@@ -14,12 +14,12 @@ class CandidacyController extends BaseController {
         }
     }
 
-    async getAllByCompanyId(req, res){
-        try{
+    async getAllByCompanyId(req, res) {
+        try {
             const companyId = parseInt(req.params.id);
             const candidacies = await Candidacy.getAllByCompanyId(this.getDbPool(), companyId);
             res.json(candidacies);
-        }catch(error){
+        } catch (error) {
             this.handleError(res, 500, error, "Error al obtener las postulaciones por empresaId");
         }
     }
@@ -102,7 +102,6 @@ class CandidacyController extends BaseController {
             this.handleError(res, 500, error, "Error al subir el documento");
         }
     }
-
 
     async deleteById(req, res) {
         try {
