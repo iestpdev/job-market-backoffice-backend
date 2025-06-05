@@ -24,6 +24,16 @@ class CandidacyController extends BaseController {
         }
     }
 
+    async getAttachmentsByStudentId(req, res) {
+        try {
+            const studentId = parseInt(req.params.id);
+            const attachments = await Candidacy.getAttachmentsByStudentId(this.getDbPool(), studentId);
+            res.json(attachments);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener los documentos de la postulación por ID del alumno");
+        }
+    }
+
     async getById(req, res) {
         try {
             const id = parseInt(req.params.id);

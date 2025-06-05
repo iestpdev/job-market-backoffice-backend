@@ -10,12 +10,17 @@ const candidacyRouter = Router();
 candidacyRouter.get("/",
     verifyToken,
     authorizeRoles('ADMIN'),
-     (req, res) => candidacyController.getAll(req, res));
+    (req, res) => candidacyController.getAll(req, res));
 
 candidacyRouter.get("/get-all-by-company-id/:id",
     verifyToken,
     authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => candidacyController.getAllByCompanyId(req, res));
+
+candidacyRouter.get("/get-attachments-by-student-id/:id",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY'),
+    (req, res) => candidacyController.getAttachmentsByStudentId(req, res));
 
 candidacyRouter.get("/:id",
     verifyToken,
@@ -41,7 +46,7 @@ candidacyRouter.delete("/:id",
 
 candidacyRouter.patch("/status/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => candidacyController.updateStatus(req, res));
 
 export default candidacyRouter;

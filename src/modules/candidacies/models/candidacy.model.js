@@ -33,9 +33,17 @@ class Candidacy extends ModelBase {
 
     static async getAllByCompanyId(conexion, companyId){
         const [result] = await conexion.query(
-            "SELECT * FROM VIEW_POSTULACIONES_POR_EMPRESA_ID WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
+            "SELECT * FROM VIEW_POSTULACIONES_CON_INFO_EMPRESA_ALUMNO WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
             [companyId]
         )
+        return result;
+    }
+
+    static async getAttachmentsByStudentId(conexion, alumnoId) {
+        const [result] = await conexion.query(
+            "SELECT ALUMNO_ID, DOC_ADJUNTO2, DOC_ADJUNTO3, DOC_ADJUNTO4 FROM POSTULACIONES WHERE ALUMNO_ID = ? AND deleted_at IS NULL",
+            [alumnoId]
+        );
         return result;
     }
 
