@@ -8,6 +8,7 @@ import offerRouter from './modules/offers/routes/offer.route.js';
 import candidacyRouter from './modules/candidacies/routes/candidacy.route.js';
 import userRouter from './modules/users/routes/user.route.js';
 import authRouter from './modules/auth/routes/auth.route.js';
+import registerRouter from './modules/auth/routes/register.route.js';
 
 class Server {
     constructor() {
@@ -20,6 +21,7 @@ class Server {
         this.candidacy_path = '/api/v1/candidacy';
         this.user_path = '/api/v1/user';
         this.auth_path = '/api/v1/auth';
+        this.registet_path = '/api/v1/auth-register';
 
         this.connectDB();
         this.middlewares();
@@ -53,6 +55,7 @@ class Server {
         this.app.use(this.candidacy_path, candidacyRouter);
         this.app.use(this.user_path, userRouter);
         this.app.use(this.auth_path, authRouter);
+        this.app.use(this.registet_path, registerRouter);
     }
 }
 
