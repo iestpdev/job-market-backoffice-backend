@@ -28,12 +28,12 @@ offerRouter.post("/",
 
 offerRouter.patch("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => offerController.update(req, res));
 
 offerRouter.delete("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => offerController.deleteById(req, res));
 
 export default offerRouter;

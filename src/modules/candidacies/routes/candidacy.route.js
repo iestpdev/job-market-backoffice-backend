@@ -17,10 +17,21 @@ candidacyRouter.get("/get-all-by-company-id/:id",
     authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => candidacyController.getAllByCompanyId(req, res));
 
+candidacyRouter.get("/get-all-by-student-id/:id",
+    verifyToken,
+    authorizeRoles('ADMIN', 'STUDENT'),
+    (req, res) => candidacyController.getAllByStudentId(req, res));
+
 candidacyRouter.get("/get-attachments-by-student-id/:id",
     verifyToken,
     authorizeRoles('ADMIN', 'COMPANY'),
     (req, res) => candidacyController.getAttachmentsByStudentId(req, res));
+
+candidacyRouter.get("/exists/:ofertaId/:alumnoId",
+    verifyToken,
+    authorizeRoles('ADMIN','STUDENT'),
+    (req, res) => candidacyController.exists(req, res)
+);
 
 candidacyRouter.get("/:id",
     verifyToken,
@@ -29,18 +40,18 @@ candidacyRouter.get("/:id",
 
 candidacyRouter.post("/",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'STUDENT'),
     (req, res) => candidacyController.create(req, res));
 
 // TODO: Enviar el nombre del archivo como una query, no como param (:field)
 candidacyRouter.patch("/upload-doc/:id/:field",
-    verifyToken, 
-    authorizeRoles('ADMIN'),
-    upload.single("file"), 
+    verifyToken,
+    authorizeRoles('ADMIN', 'STUDENT'),
+    upload.single("file"),
     (req, res) => candidacyController.uploadDocument(req, res));
 
 candidacyRouter.delete("/:id",
-    verifyToken, 
+    verifyToken,
     authorizeRoles('ADMIN'),
     (req, res) => candidacyController.deleteById(req, res));
 

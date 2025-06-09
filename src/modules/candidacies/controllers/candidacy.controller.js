@@ -24,6 +24,16 @@ class CandidacyController extends BaseController {
         }
     }
 
+    async getAllByStudentId(req, res) {
+        try {
+            const studentId = parseInt(req.params.id);
+            const candidacies = await Candidacy.getAllByStudentId(this.getDbPool(), studentId);
+            res.json(candidacies);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener las postulaciones por ID del alumno");
+        }
+    }
+
     async getAttachmentsByStudentId(req, res) {
         try {
             const studentId = parseInt(req.params.id);
@@ -72,6 +82,18 @@ class CandidacyController extends BaseController {
             res.status(201).json({ message: "Postulación creada", id: newId });
         } catch (error) {
             this.handleError(res, 500, error, "Error al crear la postulación");
+        }
+    }
+
+    async exists(req, res) {
+        try {
+            const ofertaId = parseInt(req.params.ofertaId);
+            const alumnoId = parseInt(req.params.alumnoId);
+
+            const exists = await Candidacy.exists(this.getDbPool(), ofertaId, alumnoId);
+            res.json({ exists });
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al verificar si ya se postuló");
         }
     }
 

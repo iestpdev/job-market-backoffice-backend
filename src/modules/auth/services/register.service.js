@@ -6,11 +6,9 @@ import uploadImageToSupabase from '../../../config/supabase/upload-image.js';
 
 export async function registerUserCompany(conexion, req) {
     const {
-        razonSocial, ruc, direccion1, direccion2,
+        razonSocial, ruc, direccion1,
         rubro,
         contacto1, telefono1, correo1,
-        contacto2, telefono2, correo2,
-        contacto3, telefono3, correo3,
         username, userpass
     } = req.body;
 
@@ -21,17 +19,16 @@ export async function registerUserCompany(conexion, req) {
 
     await conexion.beginTransaction();
     try {
-        const company = new Company(
-            null,
-            razonSocial,
-            ruc,
-            '',
-            direccion1, direccion2,
-            rubro,
-            contacto1, telefono1, correo1,
-            contacto2, telefono2, correo2,
-            contacto3, telefono3, correo3
-        );
+        const company = new Company();
+        company.razonSocial = razonSocial;
+        company.logo = '';
+        company.ruc = ruc;
+        company.direccion1 = direccion1;
+        company.rubro = rubro;
+        company.contacto1 = contacto1;
+        company.telefono1 = telefono1;
+        company.correo1 = correo1;
+
         await company.create(conexion);
         const companyId = company.id;
 

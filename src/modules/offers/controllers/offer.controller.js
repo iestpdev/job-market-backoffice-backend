@@ -1,6 +1,7 @@
 import { BaseController } from "../../shared/controller-base.js";
 import Offer from "../models/offer.model.js";
 import { offerSchema } from "../validators/offer.validator.js";
+import Candidacy from "../../candidacies/models/candidacy.model.js";
 
 class OfferController extends BaseController {
   async getAll(req, res) {
@@ -119,16 +120,20 @@ class OfferController extends BaseController {
     }
   }
 
+
   async deleteById(req, res) {
     try {
       const id = parseInt(req.params.id);
       const offer = await Offer.getById(this.getDbPool(), id);
       if (!offer) return res.status(404).json({ message: "Oferta no encontrada" });
 
-      const result = await Offer.softDelete(this.getDbPool(), id);
-      if (result.affectedRows <= 0) return res.status(404).json({ message: "Error al eliminar la oferta" });
+      await Candidacy.softDeleteByOfferId(this.getDbPool(), id);
 
-      res.json({ message: "Oferta eliminada" });
+      const result = await Offer.softDelete(this.getDbPool(), id);
+      if (result.affectedRows <= 0)
+        return res.status(404).json({ message: "Error al eliminar la oferta" });
+
+      res.json({ message: "Oferta y postulaciones eliminadas" });
     } catch (error) {
       this.handleError(res, 500, error, "Error al eliminar la oferta");
     }

@@ -76,14 +76,14 @@ class StudentController extends BaseController {
         fechNac: req.body?.fechNac || existingStudent.FECH_NACIMIENTO,
         tipoDOI: req.body?.tipoDOI || existingStudent.TIPO_DOI,
         numDOI: req.body?.numDOI || existingStudent.NUM_DOI,
-        curriculum: existingStudent.CURRICULUM,
       };
 
       const { error, value } = studentSchema.validate(mergedData);
       if (error) return res.status(400).json({ message: "Validación fallida", details: error.details });
 
+      let curriculumUrl = existingStudent.CURRICULUM;
       if (req.file) {
-        value.curriculum = await uploadFileToSupabase(
+        curriculumUrl = await uploadFileToSupabase(
           process.env.SUPABASE_BUCKET_FILES,
           req.file,
           'students',
@@ -99,7 +99,7 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
-        value.curriculum
+        curriculumUrl
       );
 
       const result = await student.update(this.getDbPool());

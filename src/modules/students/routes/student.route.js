@@ -18,13 +18,13 @@ studentRouter.get("/:id",
 
 studentRouter.post("/",
     verifyToken,
-    authorizeRoles('ADMIN', 'STUDENT'),
+    authorizeRoles('ADMIN'),
     upload.single("curriculum"),
     (req, res) => studentController.create(req, res));
 
 studentRouter.patch("/:id", 
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN', 'STUDENT'),
     upload.single('curriculum'),
     (req, res) => studentController.update(req, res));
 

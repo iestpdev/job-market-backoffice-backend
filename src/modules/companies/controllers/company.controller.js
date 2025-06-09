@@ -74,17 +74,16 @@ class CompanyController extends BaseController {
             const existingCompany = await Company.getById(this.getDbPool(), id);
             if (!existingCompany) return res.status(404).json({ message: "Empresa no encontrada" });
 
-            const currenDataNulleable = existingCompany;
+            const currentDataNulleable = existingCompany;
             const {
-                direccion2 = currenDataNulleable.DIRECCION2,
-                contacto2 = currenDataNulleable.CONTACTO2,
-                telefono2 = currenDataNulleable.TELEFONO2,
-                correo2 = currenDataNulleable.CORREO2,
-                contacto3 = currenDataNulleable.CONTACTO3,
-                telefono3 = currenDataNulleable.TELEFONO3,
-                correo3 = currenDataNulleable.CORREO3,
+                direccion2 = currentDataNulleable.DIRECCION2,
+                contacto2 = currentDataNulleable.CONTACTO2,
+                telefono2 = currentDataNulleable.TELEFONO2,
+                correo2 = currentDataNulleable.CORREO2,
+                contacto3 = currentDataNulleable.CONTACTO3,
+                telefono3 = currentDataNulleable.TELEFONO3,
+                correo3 = currentDataNulleable.CORREO3,
             } = req.body;
-            console.log(contacto2)
 
             const mergedData = {
                 razonSocial: req.body?.razonSocial || existingCompany.RAZON_SOCIAL,

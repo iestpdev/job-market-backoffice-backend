@@ -31,9 +31,9 @@ class Candidacy extends ModelBase {
         return result;
     }
 
-    static async getAllByCompanyId(conexion, companyId){
+    static async getAllByCompanyId(conexion, companyId) {
         const [result] = await conexion.query(
-            "SELECT * FROM VIEW_POSTULACIONES_CON_INFO_EMPRESA_ALUMNO WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
+            "SELECT * FROM VIEW_POSTULACIONES_OFERTA_ALUMNO WHERE EMPRESA_ID = ? AND deleted_at IS NULL ORDER BY created_at DESC",
             [companyId]
         )
         return result;
@@ -59,6 +59,14 @@ class Candidacy extends ModelBase {
         const [result] = await conexion.query(
             "SELECT * FROM POSTULACIONES WHERE OFERTA_ID = ? AND deleted_at IS NULL",
             [ofertaId]
+        );
+        return result;
+    }
+
+    static async getAllByStudentId(conexion, studentId) {
+        const [result] = await conexion.query(
+            "SELECT * FROM VIEW_POSTULACIONES_OFERTA_EMPRESA WHERE ALUMNO_ID = ? AND deleted_at IS NULL",
+            [studentId]
         );
         return result;
     }
@@ -136,6 +144,15 @@ class Candidacy extends ModelBase {
         const [result] = await conexion.execute(
             `UPDATE POSTULACIONES SET ${fieldName} = ? WHERE ID = ? AND ESTADO_RESPUESTA='PENDING'  AND deleted_at IS NULL`,
             [docAdjunto, id]
+        );
+        return result;
+    }
+
+    static async softDeleteByOfferId(conexion, ofertaId) {
+        const deleted_at = new Date();
+        const [result] = await conexion.query(
+            "UPDATE POSTULACIONES SET deleted_at = ? WHERE OFERTA_ID = ? AND deleted_at IS NULL",
+            [deleted_at, ofertaId]
         );
         return result;
     }
