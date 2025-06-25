@@ -6,5 +6,7 @@ export const studentSchema = Joi.object({
   genero: Joi.string().valid('M', 'F').required(),
   fechNac: Joi.date().required(),
   tipoDOI: Joi.string().max(3).required(),
-  numDOI: Joi.string().max(15).required()
+  numDOI: Joi.string().max(15).required(),
+  programaEstudio: Joi.string().max(100).required(),
+  esEgresado: Joi.boolean().required(),
 });

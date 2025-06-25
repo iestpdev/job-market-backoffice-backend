@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 class StudentController extends BaseController {
-  async getAll(req, res) {
+  async getAll(_, res) {
     try {
       const students = await Student.getAll(this.getDbPool());
       res.json(students);
@@ -40,6 +40,8 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
+        value.programaEstudio,
+        value.esEgresado,
         null
       );
 
@@ -76,6 +78,8 @@ class StudentController extends BaseController {
         fechNac: req.body?.fechNac || existingStudent.FECH_NACIMIENTO,
         tipoDOI: req.body?.tipoDOI || existingStudent.TIPO_DOI,
         numDOI: req.body?.numDOI || existingStudent.NUM_DOI,
+        programaEstudio: req.body?.programaEstudio || existingStudent.PROGRAMA_ESTUDIO,
+        esEgresado: req.body?.esEgresado || existingStudent.ES_EGRESADO,
       };
 
       const { error, value } = studentSchema.validate(mergedData);

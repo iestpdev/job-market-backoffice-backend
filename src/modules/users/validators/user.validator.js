@@ -12,5 +12,6 @@ export const userSchema = Joi.object({
         }),
     companyId: Joi.number().integer().allow(null),
     studentId: Joi.number().integer().allow(null),
+    tutorId: Joi.number().integer().allow(null),
     isActive: Joi.boolean().optional()
 });

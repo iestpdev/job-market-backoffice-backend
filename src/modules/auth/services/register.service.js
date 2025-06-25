@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import User from '../../users/models/user.model.js';
 import Company from '../../companies/models/company.model.js';
 import Student from '../../students/models/student.model.js';
+import Tutor from '../../tutors/models/tutor.model.js';
 import uploadImageToSupabase from '../../../config/supabase/upload-image.js';
 
 export async function registerUserCompany(conexion, req) {
@@ -97,3 +98,52 @@ export async function registerUserStudent(conexion, data) {
         throw error;
     }
 }
+
+export async function registerUserTutor(conexion, data) {
+    const {
+        apellidos,
+        nombres,
+        genero,
+        fechNac,
+        tipoDOI,
+        numDOI,
+        username,
+        userpass
+    } = data;
+
+    const usernameTaken = await User.isUsernameTaken(conexion, username);
+    if (usernameTaken) throw new Error('El nombre de usuario ya está en uso.');
+
+    await conexion.beginTransaction();
+    try {
+        const tutor = new Tutor(
+            null,
+            apellidos,
+            nombres,
+            genero,
+            fechNac,
+            tipoDOI,
+            numDOI
+        );
+        await tutor.create(conexion);
+
+        const hashedPassword = await bcrypt.hash(userpass, 10);
+        const user = new User(
+            null,
+            'TUTOR',
+            username,
+            hashedPassword,
+            null,
+            null,
+            tutor.id
+        );
+        await user.create(conexion);
+
+        await conexion.commit();
+        return { message: 'Registro exitoso', tutorId: tutor.id, userId: user.id };
+    } catch (error) {
+        await conexion.rollback();
+        throw error;
+    }
+}
+

@@ -15,4 +15,9 @@ registerRouter.post(
     (req, res) => registerController.registerUserStudent(req, res)
 );
 
+registerRouter.post(
+    '/tutor',
+    (req, res) => registerController.registerUserTutor(req, res)
+);
+
 export default registerRouter;

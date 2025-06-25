@@ -16,6 +16,7 @@ export async function login(conexion, username, password) {
       tipo: user[0].TIPO,
       companyId: user[0].EMPRESA_ID,
       studentId: user[0].ALUMNO_ID,
+      tutorId: user[0].TUTOR_ID,
     },
     jwtConfig.secret,
     { expiresIn: jwtConfig.expiresIn }
@@ -26,6 +27,7 @@ export async function login(conexion, username, password) {
     tipo: user[0].TIPO, 
     username: user[0].USERNAME, 
     companyId: user[0].EMPRESA_ID,
-    studentId: user[0].ALUMNO_ID 
+    studentId: user[0].ALUMNO_ID,
+    tutorId: user[0].TUTOR_ID,
   }};
 }
