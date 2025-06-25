@@ -61,7 +61,7 @@ export async function registerUserCompany(conexion, req) {
 }
 
 export async function registerUserStudent(conexion, data) {
-    const { apellidos, nombres, genero, fechNac, tipoDOI, numDOI, username, userpass } = data;
+    const { apellidos, nombres, genero, fechNac, tipoDOI, numDOI,  programaEstudio, esEgresado , username, userpass } = data;
 
     const usernameTaken = await User.isUsernameTaken(conexion, username);
     if (usernameTaken) throw new Error('El nombre de usuario ya está en uso.');
@@ -76,6 +76,8 @@ export async function registerUserStudent(conexion, data) {
             fechNac,
             tipoDOI,
             numDOI,
+            programaEstudio,
+            esEgresado,
             null
         );
         await student.create(conexion);
