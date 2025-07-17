@@ -31,6 +31,8 @@ class Server {
         this.connectDB();
         this.middlewares();
         this.routes();
+        // TODO: cantidad de candidatos en una determinada oferta
+        // TODO: actualizar la logica del controller alumno update
         // TODO: Hacer un README para la documentación de como levantar el proyecto
         // TODO: Hacer una documentación de la api con swagger
         // TODO: Pruebas unitarias con Jest (devDependecies)

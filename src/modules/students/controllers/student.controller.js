@@ -65,6 +65,7 @@ class StudentController extends BaseController {
     }
   }
 
+  //TODO: actualizar la logica de este controlador basado en la captura de datos actuales para evitar seteos con string vacios
   async update(req, res) {
     try {
       const id = parseInt(req.params.id);
@@ -79,7 +80,7 @@ class StudentController extends BaseController {
         tipoDOI: req.body?.tipoDOI || existingStudent.TIPO_DOI,
         numDOI: req.body?.numDOI || existingStudent.NUM_DOI,
         programaEstudio: req.body?.programaEstudio || existingStudent.PROGRAMA_ESTUDIO,
-        esEgresado: req.body?.esEgresado || existingStudent.ES_EGRESADO,
+        esEgresado: req.body?.esEgresado || existingStudent.ES_EGRESADO===0 ? false:true,
       };
 
       const { error, value } = studentSchema.validate(mergedData);
@@ -103,6 +104,8 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
+        value.programaEstudio,
+        value.esEgresado,
         curriculumUrl
       );
 

@@ -7,6 +7,6 @@ export const studentSchema = Joi.object({
   fechNac: Joi.date().required(),
   tipoDOI: Joi.string().max(3).required(),
   numDOI: Joi.string().max(15).required(),
-  programaEstudio: Joi.string().max(100).required(),
+  programaEstudio: Joi.string().max(100).required(), //TODO: ya sabes causa, a corregir esto
   esEgresado: Joi.boolean().required(),
 });
