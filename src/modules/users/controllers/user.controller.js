@@ -4,7 +4,7 @@ import { userSchema } from "../validators/user.validator.js";
 import bcrypt from "bcrypt";
 
 class UserController extends BaseController {
-    async getAll(req, res) {
+    async getAll(_, res) {
         try {
             const users = await User.getAll(this.getDbPool());
             res.json(users);
@@ -36,11 +36,12 @@ class UserController extends BaseController {
             const hashedPassword = await bcrypt.hash(value.userpass, 10);
             const user = new User(
                 null,
-                (value.companyId) ? 'COMPANY' : (value.studentId) ? 'STUDENT' : 'ADMIN',
+                (value.companyId) ? 'COMPANY' : (value.studentId) ? 'STUDENT' : (value.tutorId) ? 'TUTOR' : 'ADMIN',
                 value.username,
                 hashedPassword,
                 value.companyId,
                 value.studentId,
+                value.tutorId
             );
 
             const result = await user.create(this.getDbPool());
@@ -67,6 +68,7 @@ class UserController extends BaseController {
                 userpass = current.USERPASS,
                 companyId = current.EMPRESA_ID,
                 studentId = current.ALUMNO_ID,
+                tutorId = current.TUTOR_ID,
             } = req.body;
 
             const usernameExists = await User.isUsernameTaken(this.getDbPool(), username, id);
@@ -77,11 +79,12 @@ class UserController extends BaseController {
 
             const user = new User(
                 id,
-                (companyId) ? 'COMPANY' : (studentId) ? 'STUDENT' : 'ADMIN',
+                (companyId) ? 'COMPANY' : (studentId) ? 'STUDENT' : (tutorId) ? 'TUTOR' : 'ADMIN',
                 username,
                 newUserPass,
                 companyId,
                 studentId,
+                tutorId,
             );
 
             const result = await user.update(this.getDbPool());

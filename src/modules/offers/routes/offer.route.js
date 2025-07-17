@@ -7,13 +7,13 @@ const offerRouter = Router();
 
 offerRouter.get("/",
     verifyToken,
-    authorizeRoles('ADMIN', 'STUDENT'), 
+    authorizeRoles('ADMIN', 'STUDENT', 'TUTOR'), 
     (req, res) => offerController.getAll(req, res));
 
 
 offerRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'),
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT', 'TUTOR'),
     (req, res) => offerController.getById(req, res));
 
 offerRouter.get("/get-all-by-company-id/:companyId",
