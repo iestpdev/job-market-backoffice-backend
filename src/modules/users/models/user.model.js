@@ -8,6 +8,7 @@ class User extends ModelBase {
         userpass,
         companyId = null,
         studentId = null,
+        tutorId = null,
     ) {
         super();
         this.id = id;
@@ -16,6 +17,7 @@ class User extends ModelBase {
         this.userpass = userpass;
         this.companyId = companyId;
         this.studentId = studentId;
+        this.tutorId = tutorId;
         this.isActive = true;
     }
 
@@ -40,14 +42,15 @@ class User extends ModelBase {
         this.updated_at = now;
 
         const [result] = await conexion.query(
-            `INSERT INTO USUARIOS (TIPO, USERNAME, USERPASS, EMPRESA_ID, ALUMNO_ID, is_active, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO USUARIOS (TIPO, USERNAME, USERPASS, EMPRESA_ID, ALUMNO_ID, TUTOR_ID, is_active, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 this.tipo,
                 this.username,
                 this.userpass,
                 this.companyId,
                 this.studentId,
+                this.tutorId,
                 this.isActive,
                 this.created_at,
                 this.updated_at
@@ -62,7 +65,7 @@ class User extends ModelBase {
 
         const [result] = await conexion.query(
             `UPDATE USUARIOS
-             SET TIPO = ?, USERNAME = ?, USERPASS = ?, EMPRESA_ID = ?, ALUMNO_ID = ?, is_active = ?, updated_at = ?
+             SET TIPO = ?, USERNAME = ?, USERPASS = ?, EMPRESA_ID = ?, ALUMNO_ID = ?, TUTOR_ID = ?, is_active = ?, updated_at = ?
              WHERE ID = ? AND deleted_at IS NULL`,
             [
                 this.tipo,
@@ -70,6 +73,7 @@ class User extends ModelBase {
                 this.userpass,
                 this.companyId,
                 this.studentId,
+                this.tutorId,
                 this.isActive,
                 this.updated_at,
                 this.id

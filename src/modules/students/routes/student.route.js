@@ -8,12 +8,12 @@ const studentRouter = Router();
 
 studentRouter.get("/",
     verifyToken,
-    authorizeRoles('ADMIN'), 
+    authorizeRoles('ADMIN', 'TUTOR'), 
     (req, res) => studentController.getAll(req, res));
 
 studentRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'), 
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT', 'TUTOR'), 
     (req, res) => studentController.getById(req, res));
 
 studentRouter.post("/",

@@ -9,6 +9,8 @@ class Student extends ModelBase {
     fechNac,
     tipoDOI,
     numDOI,
+    programaEstudio,
+    esEgresado,
     curriculum
   ) {
     super();
@@ -19,6 +21,8 @@ class Student extends ModelBase {
     this.fechNac = fechNac;
     this.tipoDOI = tipoDOI;
     this.numDOI = numDOI;
+    this.programaEstudio = programaEstudio;
+    this.esEgresado = esEgresado;
     this.curriculum = curriculum;
   }
 
@@ -43,8 +47,8 @@ class Student extends ModelBase {
     this.updated_at = now;
 
     const [result] = await conexion.query(
-      `INSERT INTO ALUMNOS (APELLIDOS, NOMBRES, GENERO, FECH_NACIMIENTO, TIPO_DOI, NUM_DOI, CURRICULUM, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO ALUMNOS (APELLIDOS, NOMBRES, GENERO, FECH_NACIMIENTO, TIPO_DOI, NUM_DOI, PROGRAMA_ESTUDIO, ES_EGRESADO, CURRICULUM, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         this.apellidos,
         this.nombres,
@@ -52,6 +56,8 @@ class Student extends ModelBase {
         this.fechNac,
         this.tipoDOI,
         this.numDOI,
+        this.programaEstudio,
+        this.esEgresado,
         this.curriculum,
         this.created_at,
         this.updated_at
@@ -66,7 +72,7 @@ class Student extends ModelBase {
 
     const [result] = await conexion.query(
       `UPDATE ALUMNOS
-       SET APELLIDOS = ?, NOMBRES = ?, GENERO = ?, FECH_NACIMIENTO = ?, TIPO_DOI = ?, NUM_DOI = ?, CURRICULUM = ?, updated_at = ?
+       SET APELLIDOS = ?, NOMBRES = ?, GENERO = ?, FECH_NACIMIENTO = ?, TIPO_DOI = ?, NUM_DOI = ?, PROGRAMA_ESTUDIO = ?, ES_EGRESADO = ?, CURRICULUM = ?, updated_at = ?
        WHERE ID = ? AND deleted_at IS NULL`,
       [
         this.apellidos,
@@ -75,6 +81,8 @@ class Student extends ModelBase {
         this.fechNac,
         this.tipoDOI,
         this.numDOI,
+        this.programaEstudio,
+        this.esEgresado,
         this.curriculum,
         this.updated_at,
         this.id

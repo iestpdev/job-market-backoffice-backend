@@ -9,12 +9,12 @@ const companyRouter = Router();
 
 companyRouter.get("/",
     verifyToken,
-    authorizeRoles('ADMIN'), 
+    authorizeRoles('ADMIN', 'TUTOR'), 
     (req, res) => companyController.getAll(req, res));
 
 companyRouter.get("/:id",
     verifyToken,
-    authorizeRoles('ADMIN', 'COMPANY'),
+    authorizeRoles('ADMIN', 'COMPANY', 'TUTOR'),
     (req, res) => companyController.getById(req, res));
 
 companyRouter.post("/",
