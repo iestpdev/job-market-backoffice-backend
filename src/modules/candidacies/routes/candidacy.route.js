@@ -12,6 +12,11 @@ candidacyRouter.get("/",
     authorizeRoles('ADMIN'),
     (req, res) => candidacyController.getAll(req, res));
 
+candidacyRouter.get("/get-amount-candidates-by-offer-id/:id",
+    //verifyToken,
+    //authorizeRoles('ADMIN', 'COMPANY'),
+    (req, res) => candidacyController.getAmountCandidatesByOfferId(req, res));
+
 candidacyRouter.get("/get-all-by-company-id/:id",
     verifyToken,
     authorizeRoles('ADMIN', 'COMPANY'),
@@ -29,7 +34,7 @@ candidacyRouter.get("/get-attachments-by-student-id/:id",
 
 candidacyRouter.get("/exists/:ofertaId/:alumnoId",
     verifyToken,
-    authorizeRoles('ADMIN','STUDENT'),
+    authorizeRoles('ADMIN', 'STUDENT'),
     (req, res) => candidacyController.exists(req, res)
 );
 
