@@ -9,6 +9,7 @@ import offerRouter from './modules/offers/routes/offer.route.js';
 import candidacyRouter from './modules/candidacies/routes/candidacy.route.js';
 import TutorRouter from './modules/tutors/routers/tutor.route.js';
 import userRouter from './modules/users/routes/user.route.js';
+import MajorRouter from './modules/majors/routers/major.route.js';
 
 import authRouter from './modules/auth/routes/auth.route.js';
 import registerRouter from './modules/auth/routes/register.route.js';
@@ -24,6 +25,7 @@ class Server {
         this.candidacy_path = '/api/v1/candidacy';
         this.user_path = '/api/v1/user';
         this.tutor_path = '/api/v1/tutor';
+        this.major_path = '/api/v1/major';
 
         this.auth_path = '/api/v1/auth';
         this.registet_path = '/api/v1/auth-register';
@@ -31,7 +33,7 @@ class Server {
         this.connectDB();
         this.middlewares();
         this.routes();
-        // TODO: cantidad de candidatos en una determinada oferta
+        // TODO: cantidad de postulaciones en una determinada oferta
         // TODO: actualizar la logica del controller alumno update
         // TODO: Hacer un README para la documentación de como levantar el proyecto
         // TODO: Hacer una documentación de la api con swagger
@@ -62,6 +64,7 @@ class Server {
         this.app.use(this.candidacy_path, candidacyRouter);
         this.app.use(this.user_path, userRouter);
         this.app.use(this.tutor_path, TutorRouter);
+        this.app.use(this.major_path, MajorRouter);
         
         this.app.use(this.auth_path, authRouter);
         this.app.use(this.registet_path, registerRouter);
