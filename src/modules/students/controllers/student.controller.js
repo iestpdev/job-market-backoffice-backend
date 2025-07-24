@@ -30,7 +30,11 @@ class StudentController extends BaseController {
   async create(req, res) {
     try {
       const { error: validationError, value } = studentSchema.validate(req.body);
-      if (validationError) return res.status(400).json({ message: "Validación fallida", details: validationError.details });
+      if (validationError)
+        return res.status(400).json({
+          message: "Validación fallida",
+          details: validationError.details
+        });
 
       const student = new Student(
         null,
@@ -40,7 +44,7 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
-        value.programaEstudio,
+        value.programaEstudioId,
         value.esEgresado,
         null
       );
@@ -55,7 +59,6 @@ class StudentController extends BaseController {
           "students",
           newId
         );
-
         await Student.updateCurriculum(this.getDbPool(), newId, curriculumUrl);
       }
 
@@ -65,7 +68,6 @@ class StudentController extends BaseController {
     }
   }
 
-  //TODO: actualizar la logica de este controlador basado en la captura de datos actuales para evitar seteos con string vacios
   async update(req, res) {
     try {
       const id = parseInt(req.params.id);
@@ -79,12 +81,19 @@ class StudentController extends BaseController {
         fechNac: req.body?.fechNac || existingStudent.FECH_NACIMIENTO,
         tipoDOI: req.body?.tipoDOI || existingStudent.TIPO_DOI,
         numDOI: req.body?.numDOI || existingStudent.NUM_DOI,
-        programaEstudio: req.body?.programaEstudio || existingStudent.PROGRAMA_ESTUDIO,
-        esEgresado: req.body?.esEgresado || existingStudent.ES_EGRESADO===0 ? false:true,
+        programaEstudioId: req.body?.programaEstudioId || existingStudent.PROGRAMA_ESTUDIO_ID,
+        esEgresado:
+          req.body?.esEgresado !== undefined
+            ? req.body.esEgresado === "true" || req.body.esEgresado === true
+            : existingStudent.ES_EGRESADO === 1
       };
 
-      const { error, value } = studentSchema.validate(mergedData);
-      if (error) return res.status(400).json({ message: "Validación fallida", details: error.details });
+      const { error, value } = studentSchema.validate(mergedData, { abortEarly: false });
+      if (error)
+        return res.status(400).json({
+          message: "Validación fallida",
+          details: error.details.map((d) => d.message)
+        });
 
       let curriculumUrl = existingStudent.CURRICULUM;
       if (req.file) {
@@ -104,7 +113,7 @@ class StudentController extends BaseController {
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
-        value.programaEstudio,
+        value.programaEstudioId,
         value.esEgresado,
         curriculumUrl
       );

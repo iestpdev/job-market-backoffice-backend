@@ -34,7 +34,6 @@ class Server {
         this.middlewares();
         this.routes();
         // TODO: cantidad de postulaciones en una determinada oferta
-        // TODO: actualizar la logica del controller alumno update
         // TODO: Hacer un README para la documentación de como levantar el proyecto
         // TODO: Hacer una documentación de la api con swagger
         // TODO: Pruebas unitarias con Jest (devDependecies)
@@ -54,7 +53,7 @@ class Server {
     middlewares() {
         this.app.use(express.json());
         this.app.use(corsMiddleware);
-        this.app.use(morgan('tiny'));
+        this.app.use(morgan('dev'));
     }
 
     routes() {
