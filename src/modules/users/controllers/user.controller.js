@@ -53,6 +53,7 @@ class UserController extends BaseController {
         }
     }
 
+    // TODO: logica de actualización de usuario - current
     async update(req, res) {
         try {
             const id = parseInt(req.params.id);
@@ -65,23 +66,30 @@ class UserController extends BaseController {
             const current = existingUser;
             const {
                 username = current.USERNAME,
-                userpass = current.USERPASS,
                 companyId = current.EMPRESA_ID,
                 studentId = current.ALUMNO_ID,
                 tutorId = current.TUTOR_ID,
+                currentPassword,
+                newPassword
             } = req.body;
 
             const usernameExists = await User.isUsernameTaken(this.getDbPool(), username, id);
             if (usernameExists) return res.status(400).json({ message: "El nombre de usuario ya está en uso por otro usuario" });
 
-            let newUserPass;
-            if (userpass) newUserPass = await bcrypt.hash(userpass, 10);
+            let finalPassword = current.USERPASS;
+            if (currentPassword || newPassword) {
+                if (!currentPassword || !newPassword) return res.status(400).json({ message: "Debe proporcionar currentPassword y newPassword para cambiar la contraseña" });
+                
+                const passwordMatch = await bcrypt.compare(currentPassword, current.USERPASS);
+                if (!passwordMatch) return res.status(400).json({ message: "La contraseña actual es incorrecta" });
+                finalPassword = await bcrypt.hash(newPassword, 10);
+            }
 
             const user = new User(
                 id,
                 (companyId) ? 'COMPANY' : (studentId) ? 'STUDENT' : (tutorId) ? 'TUTOR' : 'ADMIN',
                 username,
-                newUserPass,
+                finalPassword,
                 companyId,
                 studentId,
                 tutorId,

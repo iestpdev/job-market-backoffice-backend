@@ -22,7 +22,7 @@ userRouter.post("/",
 
 userRouter.patch("/:id",
     verifyToken,
-    authorizeRoles('ADMIN'),
+    authorizeRoles('ADMIN','COMPANY', 'STUDENT', 'TUTOR'),
     (req, res) => userController.update(req, res));
 
 userRouter.delete("/:id",

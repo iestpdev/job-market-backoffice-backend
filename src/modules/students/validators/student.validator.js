@@ -7,6 +7,9 @@ export const studentSchema = Joi.object({
   fechNac: Joi.date().required(),
   tipoDOI: Joi.string().max(3).required(),
   numDOI: Joi.string().max(15).required(),
-  programaEstudio: Joi.string().max(100).required(),
-  esEgresado: Joi.boolean().required(),
+  programaEstudioId: Joi.number().integer().required().messages({
+    'any.required': 'El programa de estudio es obligatorio',
+    'number.base': 'El programa de estudio debe ser un ID numérico válido'
+  }),
+  esEgresado: Joi.boolean().required()
 });

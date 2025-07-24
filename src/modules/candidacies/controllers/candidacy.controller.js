@@ -5,7 +5,7 @@ import { candidacySchema } from "../validators/candidacy.validator.js";
 import uploadFileToSupabase from "../../../config/supabase/upload-file.js";
 
 class CandidacyController extends BaseController {
-    async getAll(req, res) {
+    async getAll(_, res) {
         try {
             const candidacies = await Candidacy.getAll(this.getDbPool());
             res.json(candidacies);
@@ -21,6 +21,26 @@ class CandidacyController extends BaseController {
             res.json(candidacies);
         } catch (error) {
             this.handleError(res, 500, error, "Error al obtener las postulaciones por empresaId");
+        }
+    }
+
+    async getAllByOfferId(req, res) {
+        try {
+            const offerId = parseInt(req.params.id);
+            const candidacies = await Candidacy.getAllByOfferId(this.getDbPool(), offerId);
+            res.json(candidacies);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener las postulaciones por ofertaId");
+        }
+    }
+
+    async getAmountCandidatesByOfferId(req, res) {
+        try {
+            const OfferId = parseInt(req.params.id);
+            const amount = await Candidacy.getAmountCandidatesByOfferId(this.getDbPool(), OfferId);
+            res.json(amount);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener las cantidad de postulantes");
         }
     }
 

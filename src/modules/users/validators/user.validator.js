@@ -2,14 +2,18 @@ import Joi from 'joi';
 
 export const userSchema = Joi.object({
     username: Joi.string().min(8).max(18).required(),
-    userpass: Joi.string()
+
+    currentPassword: Joi.string().optional(),
+
+    newPassword: Joi.string()
         .min(8)
         .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$'))
-        .required()
+        .optional()
         .messages({
-            'string.pattern.base': 'La contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial',
-            'string.min': 'La contraseña debe tener mínimo 8 caracteres'
+            'string.pattern.base': 'La nueva contraseña debe tener al menos una mayúscula, una minúscula, un número y un carácter especial',
+            'string.min': 'La nueva contraseña debe tener mínimo 8 caracteres'
         }),
+
     companyId: Joi.number().integer().allow(null),
     studentId: Joi.number().integer().allow(null),
     tutorId: Joi.number().integer().allow(null),
