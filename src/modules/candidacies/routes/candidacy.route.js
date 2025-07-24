@@ -7,14 +7,19 @@ import { authorizeRoles } from "../../../middleware/jwt/roles.js";
 
 const candidacyRouter = Router();
 
+candidacyRouter.get("/get-all-by-offer-id/:id",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY', 'TUTOR'),
+    (req, res) => candidacyController.getAllByOfferId(req, res));
+
 candidacyRouter.get("/",
     verifyToken,
     authorizeRoles('ADMIN'),
     (req, res) => candidacyController.getAll(req, res));
 
 candidacyRouter.get("/get-amount-candidates-by-offer-id/:id",
-    //verifyToken,
-    //authorizeRoles('ADMIN', 'COMPANY'),
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY', 'TUTOR'),
     (req, res) => candidacyController.getAmountCandidatesByOfferId(req, res));
 
 candidacyRouter.get("/get-all-by-company-id/:id",

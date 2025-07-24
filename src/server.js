@@ -10,6 +10,7 @@ import candidacyRouter from './modules/candidacies/routes/candidacy.route.js';
 import TutorRouter from './modules/tutors/routers/tutor.route.js';
 import userRouter from './modules/users/routes/user.route.js';
 import MajorRouter from './modules/majors/routers/major.route.js';
+import MajorsOffersRouter from './modules/majors/routers/majors-offers.route.js';
 
 import authRouter from './modules/auth/routes/auth.route.js';
 import registerRouter from './modules/auth/routes/register.route.js';
@@ -26,6 +27,7 @@ class Server {
         this.user_path = '/api/v1/user';
         this.tutor_path = '/api/v1/tutor';
         this.major_path = '/api/v1/major';
+        this.majors_offers_path = '/api/v1/majors-offers';
 
         this.auth_path = '/api/v1/auth';
         this.registet_path = '/api/v1/auth-register';
@@ -64,6 +66,7 @@ class Server {
         this.app.use(this.user_path, userRouter);
         this.app.use(this.tutor_path, TutorRouter);
         this.app.use(this.major_path, MajorRouter);
+        this.app.use(this.majors_offers_path, MajorsOffersRouter);
         
         this.app.use(this.auth_path, authRouter);
         this.app.use(this.registet_path, registerRouter);

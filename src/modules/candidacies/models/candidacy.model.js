@@ -63,9 +63,9 @@ class Candidacy extends ModelBase {
         return result[0];
     }
 
-    static async getByOfferId(conexion, ofertaId) {
+    static async getAllByOfferId(conexion, ofertaId) {
         const [result] = await conexion.query(
-            "SELECT * FROM POSTULACIONES WHERE OFERTA_ID = ? AND deleted_at IS NULL",
+            "SELECT * FROM VIEW_POSTULACIONES_OFERTA_ALUMNO WHERE OFERTA_ID = ? AND deleted_at IS NULL",
             [ofertaId]
         );
         return result;

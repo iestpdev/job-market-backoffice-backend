@@ -1,6 +1,6 @@
 import { BaseController } from "../../shared/controller-base.js";
 import Major from "../models/major.model.js";
-import { majorSchema } from "../validators/major.validator.js";
+import { majorSchema } from "../validators/majors.validator.js";
 
 class MajorController extends BaseController {
     async getAll(_, res) {
