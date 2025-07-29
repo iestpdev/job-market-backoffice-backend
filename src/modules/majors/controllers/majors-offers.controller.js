@@ -35,6 +35,16 @@ class MajorsOffersController extends BaseController {
             this.handleError(res, 500, error, "Error al asignar programas a la oferta");
         }
     }
+
+    async getAllOffersByMajorId(req, res) {
+        try {
+            const majorId = parseInt(req.params.majorId);
+            const result = await MajorsOffers.getAllOffersByMajorId(this.getDbPool(), majorId);
+            res.json(result);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener ofertas asociadas al programa de estudio");
+        }
+    }
 }
 
 export default new MajorsOffersController();
