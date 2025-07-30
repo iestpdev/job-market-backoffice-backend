@@ -19,4 +19,11 @@ MajorsOffersRouter.post(
     (req, res) => majorsOffersController.assignProgramsToOffer(req, res)
 );
 
+MajorsOffersRouter.get(
+    "/get-offers-by-major-id/:majorId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'),
+    (req, res) => majorsOffersController.getAllOffersByMajorId(req, res)
+);
+
 export default MajorsOffersRouter;
