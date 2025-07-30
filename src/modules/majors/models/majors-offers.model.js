@@ -39,6 +39,19 @@ class MajorsOffers extends ModelBase {
         return result;
     }
 
+    static async getAllOffersByMajorId(conexion, majorId) {
+        const [result] = await conexion.query(
+            `SELECT * FROM VIEW_OFERTAS_CON_INFO_PE_EMPRESAS
+                WHERE
+                PROGRAMA_ESTUDIO_ID = ?
+                AND deleted_at IS NULL
+                AND oferta_deleted_at IS NULL
+                ORDER BY oferta_created_at DESC`,
+            [majorId]
+        );
+        return result;
+    }
+
     static async softDeleteByOfferId(conexion, offerId) {
         const deleted_at = new Date();
         const [result] = await conexion.query(
@@ -48,15 +61,6 @@ class MajorsOffers extends ModelBase {
             [deleted_at, deleted_at, offerId]
         );
         return result;
-    }
-
-    static async exists(conexion, offerId, majorId) {
-        const [result] = await conexion.query(
-            `SELECT 1 FROM OFERTA_PROGRAMA_ESTUDIO 
-             WHERE OFERTA_ID = ? AND PROGRAMA_ESTUDIO_ID = ? AND deleted_at IS NULL LIMIT 1`,
-            [offerId, majorId]
-        );
-        return result.length > 0;
     }
 }
 
