@@ -36,6 +36,14 @@ class User extends ModelBase {
         return result[0];
     }
 
+    static async getByTutorId(conexion, tutorId) {
+        const [result] = await conexion.query(
+            "SELECT * FROM USUARIOS WHERE TUTOR_ID = ? AND deleted_at IS NULL",
+            [tutorId]
+        );
+        return result[0];
+    }
+
     async create(conexion) {
         const now = new Date();
         this.created_at = now;
@@ -77,6 +85,24 @@ class User extends ModelBase {
                 this.isActive,
                 this.updated_at,
                 this.id
+            ]
+        );
+        return result;
+    }
+
+    async updateCredencialsByTutorId(conexion, tutorId) {
+        this.updated_at = new Date();
+
+        const [result] = await conexion.query(
+            `UPDATE USUARIOS
+         SET TIPO = ?, USERNAME = ?, USERPASS = ?, updated_at = ?
+         WHERE TUTOR_ID = ? AND deleted_at IS NULL`,
+            [
+                this.tipo,
+                this.username,
+                this.userpass,
+                this.updated_at,
+                tutorId
             ]
         );
         return result;

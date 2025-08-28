@@ -47,6 +47,14 @@ class Candidacy extends ModelBase {
         return result;
     }
 
+    static async getAmountCandidaciesByStudentId(conexion, studentId){
+        const [result] = await conexion.query(
+            "SELECT COUNT(*) AS cantidadPostulaciones FROM POSTULACIONES WHERE ALUMNO_ID = ? AND deleted_at IS NULL",
+            [studentId]
+        );
+        return result;
+    }
+
     static async getAttachmentsByStudentId(conexion, alumnoId) {
         const [result] = await conexion.query(
             "SELECT ALUMNO_ID, DOC_ADJUNTO2, DOC_ADJUNTO3, DOC_ADJUNTO4 FROM POSTULACIONES WHERE ALUMNO_ID = ? AND deleted_at IS NULL",

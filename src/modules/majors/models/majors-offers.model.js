@@ -32,8 +32,13 @@ class MajorsOffers extends ModelBase {
 
     static async getAllByOfferId(conexion, offerId) {
         const [result] = await conexion.query(
-            `SELECT * FROM OFERTA_PROGRAMA_ESTUDIO 
-             WHERE OFERTA_ID = ? AND deleted_at IS NULL`,
+            `
+            SELECT OPE.*, PE.NOMBRE 
+            FROM OFERTA_PROGRAMA_ESTUDIO AS OPE
+            INNER JOIN PROGRAMA_ESTUDIO AS PE
+            ON OPE.PROGRAMA_ESTUDIO_ID = PE.ID
+            WHERE OPE.OFERTA_ID = ? AND OPE.deleted_at IS NULL;
+            `,
             [offerId]
         );
         return result;

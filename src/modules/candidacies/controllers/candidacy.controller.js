@@ -44,6 +44,16 @@ class CandidacyController extends BaseController {
         }
     }
 
+    async getAmountCandidaciesByStudentId(req, res) {
+        try {
+            const studentId = parseInt(req.params.id);
+            const amount = await Candidacy.getAmountCandidaciesByStudentId(this.getDbPool(), studentId);
+            res.json(amount);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener las cantidad de postulaciones");
+        }
+    }
+
     async getAllByStudentId(req, res) {
         try {
             const studentId = parseInt(req.params.id);
