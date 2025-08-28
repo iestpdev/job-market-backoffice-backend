@@ -22,13 +22,24 @@ userRouter.post("/",
 
 userRouter.patch("/:id",
     verifyToken,
-    authorizeRoles('ADMIN','COMPANY', 'STUDENT', 'TUTOR'),
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT', 'TUTOR'),
     (req, res) => userController.update(req, res));
+
+userRouter.patch("/update-by-tutor/:tutorId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'TUTOR'),
+    (req, res) => userController.updateByTutorId(req, res));
+
 
 userRouter.delete("/:id",
     verifyToken,
     authorizeRoles('ADMIN'),
     (req, res) => userController.deleteById(req, res));
+
+userRouter.get("/by-tutor/:tutorId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'TUTOR'),
+    (req, res) => userController.getByTutorId(req, res));
 
 // TODO: rutas para actualizar el estado del usuario (is_active)
 
