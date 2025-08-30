@@ -17,10 +17,6 @@ class MajorsOffersController extends BaseController {
             const offerId = parseInt(req.params.offerId);
             const programIds = req.body.programIds;
 
-            if (!Array.isArray(programIds) || programIds.length === 0) {
-                return res.status(400).json({ message: "Debe proporcionar un arreglo válido de IDs de programas" });
-            }
-
             await MajorsOffers.softDeleteByOfferId(this.getDbPool(), offerId);
 
             const insertResults = [];

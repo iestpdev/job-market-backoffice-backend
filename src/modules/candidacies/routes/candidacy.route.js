@@ -22,6 +22,11 @@ candidacyRouter.get("/get-amount-candidates-by-offer-id/:id",
     authorizeRoles('ADMIN', 'COMPANY', 'TUTOR'),
     (req, res) => candidacyController.getAmountCandidatesByOfferId(req, res));
 
+candidacyRouter.get("/get-amount-candidacies-by-student-id/:id",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY', 'TUTOR'),
+    (req, res) => candidacyController.getAmountCandidaciesByStudentId(req, res));
+
 candidacyRouter.get("/get-all-by-company-id/:id",
     verifyToken,
     authorizeRoles('ADMIN', 'COMPANY'),
@@ -29,7 +34,7 @@ candidacyRouter.get("/get-all-by-company-id/:id",
 
 candidacyRouter.get("/get-all-by-student-id/:id",
     verifyToken,
-    authorizeRoles('ADMIN', 'STUDENT'),
+    authorizeRoles('ADMIN', 'STUDENT', 'TUTOR'),
     (req, res) => candidacyController.getAllByStudentId(req, res));
 
 candidacyRouter.get("/get-attachments-by-student-id/:id",

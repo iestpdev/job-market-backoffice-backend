@@ -8,7 +8,7 @@ const MajorsOffersRouter = Router();
 MajorsOffersRouter.get(
     "/:offerId",
     verifyToken,
-    authorizeRoles('ADMIN', 'COMPANY'),
+    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'),
     (req, res) => majorsOffersController.getAllByOfferId(req, res)
 );
 

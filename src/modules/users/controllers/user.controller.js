@@ -25,6 +25,18 @@ class UserController extends BaseController {
         }
     }
 
+    async getByTutorId(req, res) {
+        try {
+            const tutorId = parseInt(req.params.tutorId);
+            const user = await User.getByTutorId(this.getDbPool(), tutorId);
+
+            if (!user) return res.status(404).json({ message: "Usuario no encontrado por TUTOR_ID" });
+            res.json(user);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener el usuario");
+        }
+    }
+
     async create(req, res) {
         try {
             const { error: validationError, value } = userSchema.validate(req.body);
@@ -53,7 +65,6 @@ class UserController extends BaseController {
         }
     }
 
-    // TODO: logica de actualización de usuario - current
     async update(req, res) {
         try {
             const id = parseInt(req.params.id);
@@ -79,7 +90,7 @@ class UserController extends BaseController {
             let finalPassword = current.USERPASS;
             if (currentPassword || newPassword) {
                 if (!currentPassword || !newPassword) return res.status(400).json({ message: "Debe proporcionar currentPassword y newPassword para cambiar la contraseña" });
-                
+
                 const passwordMatch = await bcrypt.compare(currentPassword, current.USERPASS);
                 if (!passwordMatch) return res.status(400).json({ message: "La contraseña actual es incorrecta" });
                 finalPassword = await bcrypt.hash(newPassword, 10);
@@ -101,6 +112,55 @@ class UserController extends BaseController {
             res.json({ message: "Usuario actualizado" });
         } catch (error) {
             this.handleError(res, 500, error, "Error al actualizar el usuario");
+        }
+    }
+
+    async updateByTutorId(req, res) {
+        try {
+            const tutorId = parseInt(req.params.tutorId);
+            const existingUser = await User.getByTutorId(this.getDbPool(), tutorId);
+            if (!existingUser) return res.status(404).json({ message: "Usuario no encontrado con el TUTOR_ID especificado" });
+
+            const { error } = userSchema.validate(req.body, { abortEarly: false });
+            if (error) return res.status(400).json({ message: "Validación fallida", details: error.details.map(d => d.message) });
+
+            const current = existingUser;
+            console.log(current)
+            const {
+                username = current.USERNAME,
+                currentPassword,
+                newPassword
+            } = req.body;
+
+            const usernameExists = await User.isUsernameTaken(this.getDbPool(), username, current.ID);
+            if (usernameExists) return res.status(400).json({ message: "El nombre de usuario ya está en uso por otro usuario" });
+
+            let finalPassword = current.USERPASS;
+            if (currentPassword || newPassword) {
+                if (!currentPassword || !newPassword) return res.status(400).json({ message: "Debe proporcionar currentPassword y newPassword para cambiar la contraseña" });
+
+                const passwordMatch = await bcrypt.compare(currentPassword, current.USERPASS);
+                if (!passwordMatch) return res.status(400).json({ message: "La contraseña actual es incorrecta" });
+                finalPassword = await bcrypt.hash(newPassword, 10);
+            }
+
+            const user = new User(
+                current.ID,
+                current.TIPO,
+                username,
+                finalPassword,
+                current.EMPRESA_ID,
+                current.ALUMNO_ID,
+                tutorId,
+                current.isActive
+            );
+
+            const result = await user.updateCredencialsByTutorId(this.getDbPool(), tutorId);
+            if (result.affectedRows <= 0) return res.sendStatus(204); // No se realizaron cambios
+
+            res.json({ message: "Usuario actualizado por TUTOR_ID" });
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al actualizar el usuario por TUTOR_ID");
         }
     }
 

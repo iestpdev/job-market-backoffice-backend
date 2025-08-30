@@ -12,8 +12,6 @@ MajorRouter.get("/",
 );
 
 MajorRouter.get("/activated",
-    verifyToken,
-    authorizeRoles('ADMIN', 'COMPANY', 'STUDENT'),
     (req, res) => majorController.GetActivated(req, res)
 );
 
