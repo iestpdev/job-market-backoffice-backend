@@ -45,6 +45,11 @@ userRouter.get("/by-tutor/:tutorId",
     authorizeRoles('ADMIN', 'TUTOR'),
     (req, res) => userController.getByTutorId(req, res));
 
+userRouter.get("/by-student/:studentId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'STUDENT'),
+    (req, res) => userController.getByStudentId(req, res));
+
 // TODO: rutas para actualizar el estado del usuario (is_active)
 
 export default userRouter;

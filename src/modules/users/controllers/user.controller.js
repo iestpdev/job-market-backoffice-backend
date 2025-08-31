@@ -37,6 +37,18 @@ class UserController extends BaseController {
         }
     }
 
+    async getByStudentId(req, res) {
+        try {
+            const studentId = parseInt(req.params.studentId);
+            const user = await User.getByStudentId(this.getDbPool(), studentId);
+
+            if (!user) return res.status(404).json({ message: "Usuario no encontrado por ALUMNO_ID" });
+            res.json(user);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener el usuario");
+        }
+    }
+
     async create(req, res) {
         try {
             const { error: validationError, value } = userSchema.validate(req.body);
