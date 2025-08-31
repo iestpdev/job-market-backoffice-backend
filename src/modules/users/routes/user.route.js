@@ -27,7 +27,7 @@ userRouter.patch("/:id",
 
 userRouter.patch("/update-by-tutor/:tutorId",
     verifyToken,
-    authorizeRoles('ADMIN', 'TUTOR'),
+    authorizeRoles('ADMIN'),
     (req, res) => userController.updateByTutorId(req, res));
 
 
