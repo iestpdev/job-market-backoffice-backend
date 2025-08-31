@@ -44,6 +44,14 @@ class User extends ModelBase {
         return result[0];
     }
 
+    static async getByStudentId(conexion, studentId) {
+        const [result] = await conexion.query(
+            "SELECT * FROM USUARIOS WHERE ALUMNO_ID = ? AND deleted_at IS NULL",
+            [studentId]
+        );
+        return result[0];
+    }
+
     async create(conexion) {
         const now = new Date();
         this.created_at = now;
@@ -90,24 +98,6 @@ class User extends ModelBase {
         return result;
     }
 
-    async updateCredencialsByTutorId(conexion, tutorId) {
-        this.updated_at = new Date();
-
-        const [result] = await conexion.query(
-            `UPDATE USUARIOS
-         SET TIPO = ?, USERNAME = ?, USERPASS = ?, updated_at = ?
-         WHERE TUTOR_ID = ? AND deleted_at IS NULL`,
-            [
-                this.tipo,
-                this.username,
-                this.userpass,
-                this.updated_at,
-                tutorId
-            ]
-        );
-        return result;
-    }
-
     static async softDelete(conexion, id) {
         const deleted_at = new Date();
         const [result] = await conexion.query(
@@ -128,6 +118,40 @@ class User extends ModelBase {
 
         const [result] = await conexion.query(query, params);
         return result[0].count > 0;
+    }
+
+    async updateCredencialsByTutorId(conexion, tutorId) {
+        this.updated_at = new Date();
+
+        const [result] = await conexion.query(
+            `UPDATE USUARIOS
+         SET USERNAME = ?, USERPASS = ?, updated_at = ?
+         WHERE TUTOR_ID = ? AND deleted_at IS NULL`,
+            [
+                this.username,
+                this.userpass,
+                this.updated_at,
+                tutorId
+            ]
+        );
+        return result;
+    }
+
+    async updateCredencialsByStudentId(conexion, studentId) {
+        this.updated_at = new Date();
+
+        const [result] = await conexion.query(
+            `UPDATE USUARIOS
+         SET USERNAME = ?, USERPASS = ?, updated_at = ?
+         WHERE ALUMNO_ID = ? AND deleted_at IS NULL`,
+            [
+                this.username,
+                this.userpass,
+                this.updated_at,
+                studentId
+            ]
+        );
+        return result;
     }
 
 }

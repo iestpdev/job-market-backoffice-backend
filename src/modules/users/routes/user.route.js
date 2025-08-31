@@ -25,11 +25,15 @@ userRouter.patch("/:id",
     authorizeRoles('ADMIN', 'COMPANY', 'STUDENT', 'TUTOR'),
     (req, res) => userController.update(req, res));
 
-userRouter.patch("/update-by-tutor/:tutorId",
+userRouter.patch("/update-credentials-by-tutor/:tutorId",
     verifyToken,
     authorizeRoles('ADMIN'),
-    (req, res) => userController.updateByTutorId(req, res));
+    (req, res) => userController.updateCredentialsByTutorId(req, res));
 
+userRouter.patch("/update-credentials-by-student/:studentId",
+    verifyToken,
+    authorizeRoles('ADMIN'),
+    (req, res) => userController.updateCredentialsByStudentId(req, res));
 
 userRouter.delete("/:id",
     verifyToken,

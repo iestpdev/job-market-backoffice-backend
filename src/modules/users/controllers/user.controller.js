@@ -115,16 +115,30 @@ class UserController extends BaseController {
         }
     }
 
-    async updateByTutorId(req, res) {
+    async deleteById(req, res) {
+        try {
+            const id = parseInt(req.params.id);
+            const user = await User.getById(this.getDbPool(), id);
+            if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+
+            const result = await User.softDelete(this.getDbPool(), id);
+            if (result.affectedRows <= 0)
+                return res.status(404).json({ message: "Error al eliminar el usuario" });
+
+            res.json({ message: "Usuario eliminado" });
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al eliminar el usuario");
+        }
+    }
+
+    async updateCredentialsByTutorId(req, res) {
         try {
             const tutorId = Number(req.params.tutorId);
-            if (Number.isNaN(tutorId)) {
-                return res.status(400).json({ message: "tutorId inválido" });
-            }
+            if (Number.isNaN(tutorId)) return res.status(400).json({ message: "tutorId inválido" });
 
             const existingUser = await User.getByTutorId(this.getDbPool(), tutorId);
-            if (!existingUser)  return res.status(404).json({ message: "Usuario no encontrado con el TUTOR_ID especificado" });
-            
+            if (!existingUser) return res.status(404).json({ message: "Usuario no encontrado con el TUTOR_ID especificado" });
+
             const { username, newPassword } = req.body ?? {};
 
             if (
@@ -161,19 +175,47 @@ class UserController extends BaseController {
         }
     }
 
-    async deleteById(req, res) {
+    async updateCredentialsByStudentId(req, res) {
         try {
-            const id = parseInt(req.params.id);
-            const user = await User.getById(this.getDbPool(), id);
-            if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+            const studentId = Number(req.params.studentId);
+            if (Number.isNaN(studentId)) return res.status(400).json({ message: "studentId inválido" });
 
-            const result = await User.softDelete(this.getDbPool(), id);
-            if (result.affectedRows <= 0)
-                return res.status(404).json({ message: "Error al eliminar el usuario" });
+            const existingUser = await User.getByStudentId(this.getDbPool(), studentId);
+            if (!existingUser) return res.status(404).json({ message: "Usuario no encontrado con el ALUMNO_ID especificado" });
 
-            res.json({ message: "Usuario eliminado" });
+            const { username, newPassword } = req.body ?? {};
+
+            if (
+                typeof username !== "string" || !username.trim() ||
+                typeof newPassword !== "string" || !newPassword.trim()
+            ) {
+                return res.status(400).json({ message: "username y newPassword son requeridos" });
+            }
+
+            const usernameExists = await User.isUsernameTaken(
+                this.getDbPool(),
+                username,
+                existingUser.ID
+            );
+            if (usernameExists) return res.status(400).json({ message: "El nombre de usuario ya está en uso por otro usuario" });
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const user = new User(
+                existingUser.ID,
+                existingUser.TIPO,
+                username.trim(),
+                hashedPassword,
+                existingUser.EMPRESA_ID,
+                studentId,
+                existingUser.TUTOR_ID
+            );
+
+            const result = await user.updateCredencialsByStudentId(this.getDbPool(), studentId);
+            if (!result || result.affectedRows <= 0) return res.sendStatus(204);
+
+            return res.json({ message: "Usuario actualizado por ALUMNO_ID" });
         } catch (error) {
-            this.handleError(res, 500, error, "Error al eliminar el usuario");
+            this.handleError(res, 500, error, "Error al actualizar el usuario por ALUMNO_ID");
         }
     }
 }
