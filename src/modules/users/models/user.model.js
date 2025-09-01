@@ -52,6 +52,14 @@ class User extends ModelBase {
         return result[0];
     }
 
+    static async getByCompanyId(conexion, companyId) {
+        const [result] = await conexion.query(
+            "SELECT * FROM USUARIOS WHERE EMPRESA_ID = ? AND deleted_at IS NULL",
+            [companyId]
+        );
+        return result[0];
+    }
+
     async create(conexion) {
         const now = new Date();
         this.created_at = now;
@@ -149,6 +157,23 @@ class User extends ModelBase {
                 this.userpass,
                 this.updated_at,
                 studentId
+            ]
+        );
+        return result;
+    }
+
+    async updateCredencialsByCompanyId(conexion, companyId) {
+        this.updated_at = new Date();
+
+        const [result] = await conexion.query(
+            `UPDATE USUARIOS
+         SET USERNAME = ?, USERPASS = ?, updated_at = ?
+         WHERE EMPRESA_ID = ? AND deleted_at IS NULL`,
+            [
+                this.username,
+                this.userpass,
+                this.updated_at,
+                companyId
             ]
         );
         return result;

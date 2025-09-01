@@ -37,6 +37,18 @@ class UserController extends BaseController {
         }
     }
 
+    async getByCompanyId(req, res) {
+        try {
+            const companyId = parseInt(req.params.companyId);
+            const user = await User.getByCompanyId(this.getDbPool(), companyId);
+
+            if (!user) return res.status(404).json({ message: "Usuario no encontrado por EMPRESA_ID" });
+            res.json(user);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener el usuario");
+        }
+    }
+
     async getByStudentId(req, res) {
         try {
             const studentId = parseInt(req.params.studentId);
@@ -228,6 +240,50 @@ class UserController extends BaseController {
             return res.json({ message: "Usuario actualizado por ALUMNO_ID" });
         } catch (error) {
             this.handleError(res, 500, error, "Error al actualizar el usuario por ALUMNO_ID");
+        }
+    }
+
+    async updateCredentialsByCompanyId(req, res) {
+        try {
+            const companyId = Number(req.params.companyId);
+            if (Number.isNaN(companyId)) return res.status(400).json({ message: "companyId inválido" });
+
+            const existingUser = await User.getByCompanyId(this.getDbPool(), companyId);
+            if (!existingUser) return res.status(404).json({ message: "Usuario no encontrado con el EMPRESA_ID especificado" });
+
+            const { username, newPassword } = req.body ?? {};
+
+            if (
+                typeof username !== "string" || !username.trim() ||
+                typeof newPassword !== "string" || !newPassword.trim()
+            ) {
+                return res.status(400).json({ message: "username y newPassword son requeridos" });
+            }
+
+            const usernameExists = await User.isUsernameTaken(
+                this.getDbPool(),
+                username,
+                existingUser.ID
+            );
+            if (usernameExists) return res.status(400).json({ message: "El nombre de usuario ya está en uso por otro usuario" });
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const user = new User(
+                existingUser.ID,
+                existingUser.TIPO,
+                username.trim(),
+                hashedPassword,
+                companyId,
+                existingUser.ALUMNO_ID,
+                existingUser.TUTOR_ID
+            );
+
+            const result = await user.updateCredencialsByCompanyId(this.getDbPool(), companyId);
+            if (!result || result.affectedRows <= 0) return res.sendStatus(204);
+
+            return res.json({ message: "Usuario actualizado por EMPRESA_ID" });
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al actualizar el usuario por EMPRESA_ID");
         }
     }
 }

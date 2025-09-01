@@ -35,6 +35,11 @@ userRouter.patch("/update-credentials-by-student/:studentId",
     authorizeRoles('ADMIN'),
     (req, res) => userController.updateCredentialsByStudentId(req, res));
 
+userRouter.patch("/update-credentials-by-company/:companyId",
+    verifyToken,
+    authorizeRoles('ADMIN'),
+    (req, res) => userController.updateCredentialsByCompanyId(req, res));
+
 userRouter.delete("/:id",
     verifyToken,
     authorizeRoles('ADMIN'),
@@ -49,6 +54,11 @@ userRouter.get("/by-student/:studentId",
     verifyToken,
     authorizeRoles('ADMIN', 'STUDENT'),
     (req, res) => userController.getByStudentId(req, res));
+
+userRouter.get("/by-company/:companyId",
+    verifyToken,
+    authorizeRoles('ADMIN', 'COMPANY'),
+    (req, res) => userController.getByCompanyId(req, res));
 
 // TODO: rutas para actualizar el estado del usuario (is_active)
 
