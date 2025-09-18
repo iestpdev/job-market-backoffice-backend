@@ -4,6 +4,12 @@ import { verifyToken } from "../../../middleware/jwt/auth.js";
 import { authorizeRoles } from "../../../middleware/jwt/roles.js";
 
 const savedOfferRouter = Router();
+savedOfferRouter.get("/exists",
+    verifyToken,
+    authorizeRoles('ADMIN', 'STUDENT'),
+    (req, res) => savedOfferController.exists(req, res)
+);
+
 savedOfferRouter.get("/:studentId",
     verifyToken,
     authorizeRoles('ADMIN', 'STUDENT'),

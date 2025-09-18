@@ -20,12 +20,27 @@ class SavedOfferController extends BaseController {
             const exists = await SavedOffer.exists(this.getDbPool(), ofertaId, studentId);
             if (exists) return res.status(409).json({ message: "La oferta ya está guardada por este estudiante" });
             const savedOffer = new SavedOffer(ofertaId, studentId);
-            
+
             const result = await savedOffer.create(this.getDbPool());
-            if (result) res.status(201).json({ message: "Oferta guardada exitosamente"});
+            if (result) res.status(201).json({ message: "Oferta guardada exitosamente" });
 
         } catch (error) {
             this.handleError(res, 500, error, "Error al guardar la oferta");
+        }
+    }
+
+    async exists(req, res) {
+        try {
+            const { studentId, ofertaId } = req.query;
+            console.log("studentId:", studentId, "ofertaId:", ofertaId);
+            if (!studentId || !ofertaId) {
+                return res.status(400).json({ message: "studentId y ofertaId son requeridos" });
+            }
+
+            const exists = await SavedOffer.exists(this.getDbPool(), ofertaId, studentId);
+            res.json({ exists });
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al verificar si la oferta está guardada");
         }
     }
 
