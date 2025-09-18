@@ -13,6 +13,16 @@ class UserController extends BaseController {
         }
     }
 
+    async getAllOnlyUsersAdmin(req, res){
+        try {
+            const { idUserAdminAuth } = req.query;
+            const users = await User.getAllOnlyUsersAdmin(this.getDbPool(), idUserAdminAuth);
+            res.json(users);
+        } catch (error) {
+            this.handleError(res, 500, error, "Error al obtener los administradores");
+        }
+    }
+
     async getById(req, res) {
         try {
             const id = parseInt(req.params.id);
