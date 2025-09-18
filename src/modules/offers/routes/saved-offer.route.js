@@ -16,7 +16,7 @@ savedOfferRouter.post("/",
 
 savedOfferRouter.delete("/",
     verifyToken,
-    authorizeRoles('ADMIN', 'STUDENT', 'TUTOR'),
+    authorizeRoles('ADMIN', 'STUDENT'),
     (req, res) => savedOfferController.delete(req, res));
 
 export default savedOfferRouter;
