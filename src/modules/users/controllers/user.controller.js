@@ -13,10 +13,9 @@ class UserController extends BaseController {
         }
     }
 
-    async getAllOnlyUsersAdmin(req, res){
+    async getAllOnlyUsersAdmin(_, res){
         try {
-            const { idUserAdminAuth } = req.query;
-            const users = await User.getAllOnlyUsersAdmin(this.getDbPool(), idUserAdminAuth);
+            const users = await User.getAllOnlyUsersAdmin(this.getDbPool());
             res.json(users);
         } catch (error) {
             this.handleError(res, 500, error, "Error al obtener los administradores");
