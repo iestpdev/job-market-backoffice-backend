@@ -28,7 +28,7 @@ class Student extends ModelBase {
 
   static async getAll(conexion) {
     const [result] = await conexion.query(
-      "SELECT * FROM ALUMNOS WHERE deleted_at IS NULL"
+      "SELECT * FROM VIEW_ALUMNOS_CON_PROGRAMA_ESTUDIO WHERE deleted_at IS NULL"
     );
     return result;
   }
