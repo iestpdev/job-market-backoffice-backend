@@ -28,6 +28,13 @@ class User extends ModelBase {
         return result;
     }
 
+    static async getAllOnlyUsersAdmin(conexion){
+        const [result] = await conexion.query(
+            "SELECT * FROM USUARIOS WHERE TIPO='ADMIN' AND deleted_at IS NULL"
+        );
+        return result;
+    }
+
     static async getById(conexion, id) {
         const [result] = await conexion.query(
             "SELECT * FROM USUARIOS WHERE ID = ? AND deleted_at IS NULL",

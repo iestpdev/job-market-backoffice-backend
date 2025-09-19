@@ -4,10 +4,8 @@ dotenv.config();
 
 const allowedOrigins = [
   process.env.ALLOWED_ORIGIN_CLIENT,
-  process.env.ALLOWED_ORIGIN_CLIENT_NGROK,
   
   process.env.ALLOWED_ORIGIN_ADMIN,
-  process.env.ALLOWED_ORIGIN_ADMIN_NGROK,
 ];
 
 const defaultCorsOptions = {
