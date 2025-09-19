@@ -10,6 +10,11 @@ userRouter.get("/",
     authorizeRoles('ADMIN'),
     (req, res) => userController.getAll(req, res));
 
+userRouter.get("/usersAdmin",
+    verifyToken,
+    authorizeRoles('ADMIN'),
+    (req, res) => userController.getAllOnlyUsersAdmin(req, res));
+
 userRouter.get("/:id",
     verifyToken,
     authorizeRoles('ADMIN'),

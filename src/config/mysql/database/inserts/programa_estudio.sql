@@ -6,4 +6,6 @@ VALUES
 ('Electrónica Industrial', 1, NOW(), NOW()),
 ('Enfermería Técnica', 1, NOW(), NOW()),
 ('Industrias Alimentarias', 1, NOW(), NOW()),
-('Producción Agropecuaria', 1, NOW(), NOW());
+('Producción Agropecuaria', 1, NOW(), NOW()),
+('Arquitectura de Plataformas y Servicios de TI', 1, NOW(), NOW());
+
