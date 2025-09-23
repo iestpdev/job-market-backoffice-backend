@@ -17,7 +17,7 @@ class MajorsOffersController extends BaseController {
             const offerId = parseInt(req.params.offerId);
             const programIds = req.body.programIds;
 
-            await MajorsOffers.softDeleteByOfferId(this.getDbPool(), offerId);
+            await MajorsOffers.hardDeleteByOfferId(this.getDbPool(), offerId);
 
             const insertResults = [];
             for (const majorId of programIds) {
