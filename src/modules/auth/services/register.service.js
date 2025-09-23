@@ -4,6 +4,7 @@ import Company from '../../companies/models/company.model.js';
 import Student from '../../students/models/student.model.js';
 import Tutor from '../../tutors/models/tutor.model.js';
 import uploadImageToSupabase from '../../../config/supabase/upload-image.js';
+import { registerStudentSchema } from '../validators/register-student.validator.js';
 
 export async function registerUserCompany(conexion, req) {
     const {
@@ -61,17 +62,42 @@ export async function registerUserCompany(conexion, req) {
 }
 
 export async function registerUserStudent(conexion, data) {
-    const { apellidos, nombres, genero, fechNac, tipoDOI, numDOI,  programaEstudioId, esEgresado , username, userpass } = data;
+    // Validacion de datos de entrada con Joi
+    const { error, value } = registerStudentSchema.validate(data, { abortEarly: false });
+    if (error) {
+        const messages = error.details.map(d => d.message);
+        throw new Error(messages.join(', '));
+    }
 
+    // datos validados y saneados
+    const {
+        apellidos, nombres, correo_institucional, telefono,
+        genero, fechNac, tipoDOI, numDOI, programaEstudioId,
+        esEgresado, username, userpass
+    } = value;
+
+    // Validaciones de unicidad
     const usernameTaken = await User.isUsernameTaken(conexion, username);
     if (usernameTaken) throw new Error('El nombre de usuario ya está en uso.');
 
+    const existingNumDOI = await Student.isNumDOIExists(conexion, numDOI);
+    if (existingNumDOI) throw new Error('El número de documento ya está registrado.');
+
+    const existingCorreo = await Student.isCorreoInstitucionalExists(conexion, correo_institucional);
+    if (existingCorreo) throw new Error('El correo institucional ya está registrado.');
+
+    const existingTelefono = await Student.isTelefonoExists(conexion, telefono);
+    if (existingTelefono) throw new Error('El teléfono ya está registrado.');
+
+    // Transaccion
     await conexion.beginTransaction();
     try {
         const student = new Student(
             null,
             apellidos,
             nombres,
+            correo_institucional,
+            telefono,
             genero,
             fechNac,
             tipoDOI,

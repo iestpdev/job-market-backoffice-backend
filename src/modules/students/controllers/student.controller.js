@@ -36,11 +36,22 @@ class StudentController extends BaseController {
           details: validationError.details
         });
 
+      const existingNumDOI = await Student.isNumDOIExists(this.getDbPool(), value.numDOI);
+      if (existingNumDOI) return res.status(400).json({ message: "El número de documento ya está registrado" });
+
+      const existingCorreo = await Student.isCorreoInstitucionalExists(this.getDbPool(), value.correo_institucional);
+      if (existingCorreo) return res.status(400).json({ message: "El correo institucional ya está registrado" });
+
+      const existingTelefono = await Student.isTelefonoExists(this.getDbPool(), value.telefono);
+      if (existingTelefono) return res.status(400).json({ message: "El teléfono ya está registrado" });
+
       const student = new Student(
         null,
         value.apellidos,
         value.nombres,
         value.genero,
+        value.correo_institucional,
+        value.telefono,
         value.fechNac,
         value.tipoDOI,
         value.numDOI,
@@ -48,7 +59,6 @@ class StudentController extends BaseController {
         value.esEgresado,
         null
       );
-
       const result = await student.create(this.getDbPool());
       const newId = result.insertId;
 
@@ -61,7 +71,6 @@ class StudentController extends BaseController {
         );
         await Student.updateCurriculum(this.getDbPool(), newId, curriculumUrl);
       }
-
       res.status(201).json({ message: "Estudiante creado", id: newId });
     } catch (error) {
       this.handleError(res, 500, error, "Error al crear el estudiante");
@@ -77,6 +86,8 @@ class StudentController extends BaseController {
       const mergedData = {
         apellidos: req.body?.apellidos || existingStudent.APELLIDOS,
         nombres: req.body?.nombres || existingStudent.NOMBRES,
+        correo_institucional: req.body?.correo_institucional || existingStudent.CORREO_INSTITUCIONAL,
+        telefono: req.body?.telefono || existingStudent.TELEFONO,
         genero: req.body?.genero || existingStudent.GENERO,
         fechNac: req.body?.fechNac || existingStudent.FECH_NACIMIENTO,
         tipoDOI: req.body?.tipoDOI || existingStudent.TIPO_DOI,
@@ -95,6 +106,21 @@ class StudentController extends BaseController {
           details: error.details.map((d) => d.message)
         });
 
+      if (value.numDOI !== existingStudent.NUM_DOI) {
+        const existingNumDOI = await Student.isNumDOIExists(this.getDbPool(), value.numDOI);
+        if (existingNumDOI) return res.status(400).json({ message: "El número de documento ya está registrado" });
+      }
+
+      if (value.correo_institucional !== existingStudent.CORREO_INSTITUCIONAL) {
+        const existingCorreo = await Student.isCorreoInstitucionalExists(this.getDbPool(), value.correo_institucional);
+        if (existingCorreo) return res.status(400).json({ message: "El correo institucional ya está registrado" });
+      }
+
+      if (value.telefono !== existingStudent.TELEFONO) {
+        const existingTelefono = await Student.isTelefonoExists(this.getDbPool(), value.telefono);
+        if (existingTelefono) return res.status(400).json({ message: "El teléfono ya está registrado" });
+      }
+
       let curriculumUrl = existingStudent.CURRICULUM;
       if (req.file) {
         curriculumUrl = await uploadFileToSupabase(
@@ -109,6 +135,8 @@ class StudentController extends BaseController {
         id,
         value.apellidos,
         value.nombres,
+        value.correo_institucional,
+        value.telefono,
         value.genero,
         value.fechNac,
         value.tipoDOI,

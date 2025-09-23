@@ -5,6 +5,8 @@ class Student extends ModelBase {
     id = null,
     apellidos,
     nombres,
+    correo_institucional,
+    telefono,
     genero,
     fechNac,
     tipoDOI,
@@ -17,6 +19,8 @@ class Student extends ModelBase {
     this.id = id;
     this.apellidos = apellidos;
     this.nombres = nombres;
+    this.correo_institucional = correo_institucional;
+    this.telefono = telefono;
     this.genero = genero;
     this.fechNac = fechNac;
     this.tipoDOI = tipoDOI;
@@ -48,14 +52,16 @@ class Student extends ModelBase {
 
     const [result] = await conexion.query(
       `INSERT INTO ALUMNOS (
-         APELLIDOS, NOMBRES, GENERO, FECH_NACIMIENTO,
+         APELLIDOS, NOMBRES, CORREO_INSTITUCIONAL, TELEFONO, GENERO, FECH_NACIMIENTO,
          TIPO_DOI, NUM_DOI, PROGRAMA_ESTUDIO_ID, ES_EGRESADO,
          CURRICULUM, created_at, updated_at
        )
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         this.apellidos,
         this.nombres,
+        this.correo_institucional,
+        this.telefono,
         this.genero,
         this.fechNac,
         this.tipoDOI,
@@ -76,13 +82,15 @@ class Student extends ModelBase {
 
     const [result] = await conexion.query(
       `UPDATE ALUMNOS
-       SET APELLIDOS = ?, NOMBRES = ?, GENERO = ?, FECH_NACIMIENTO = ?,
+       SET APELLIDOS = ?, NOMBRES = ?, CORREO_INSTITUCIONAL=?, TELEFONO=?, GENERO = ?, FECH_NACIMIENTO = ?,
            TIPO_DOI = ?, NUM_DOI = ?, PROGRAMA_ESTUDIO_ID = ?, ES_EGRESADO = ?,
            CURRICULUM = ?, updated_at = ?
        WHERE ID = ? AND deleted_at IS NULL`,
       [
         this.apellidos,
         this.nombres,
+        this.correo_institucional,
+        this.telefono,
         this.genero,
         this.fechNac,
         this.tipoDOI,
@@ -113,6 +121,34 @@ class Student extends ModelBase {
     );
     return result;
   }
+
+  static async isNumDOIExists(conexion, numDOI) {
+    const [result] = await conexion.query(
+      `SELECT COUNT(*) AS total FROM ALUMNOS 
+     WHERE NUM_DOI = ? AND deleted_at IS NULL`,
+      [numDOI]
+    );
+    return result[0].total > 0;
+  }
+
+  static async isCorreoInstitucionalExists(conexion, correo) {
+    const [result] = await conexion.query(
+      `SELECT COUNT(*) AS total FROM ALUMNOS 
+     WHERE CORREO_INSTITUCIONAL = ? AND deleted_at IS NULL`,
+      [correo]
+    );
+    return result[0].total > 0;
+  }
+
+  static async isTelefonoExists(conexion, telefono) {
+    const [result] = await conexion.query(
+      `SELECT COUNT(*) AS total FROM ALUMNOS 
+     WHERE TELEFONO = ? AND deleted_at IS NULL`,
+      [telefono]
+    );
+    return result[0].total > 0;
+  }
+
 }
 
 export default Student;
