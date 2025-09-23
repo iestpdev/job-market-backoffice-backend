@@ -16,6 +16,8 @@ import savedOfferRouter from './modules/offers/routes/saved-offer.route.js';
 import authRouter from './modules/auth/routes/auth.route.js';
 import registerRouter from './modules/auth/routes/register.route.js';
 
+import decolectaRouter from './services-external/decolecta/routes/decolecta.route.js';
+
 class Server {
     constructor() {
         this.app = express();
@@ -34,14 +36,14 @@ class Server {
         this.auth_path = '/api/v1/auth';
         this.registet_path = '/api/v1/auth-register';
 
+        this.decolecta_path = '/api/v1/decolecta';
+
         this.connectDB();
         this.middlewares();
         this.routes();
-        // TODO: cantidad de postulaciones en una determinada oferta
         // TODO: Hacer un README para la documentación de como levantar el proyecto
         // TODO: Hacer una documentación de la api con swagger
         // TODO: Pruebas unitarias con Jest (devDependecies)
-        // TODO: Checkear la logica de todos los updates (basarse en el update de user/controller) o de Company/Controller
     }
 
     listen() {
@@ -73,6 +75,8 @@ class Server {
         
         this.app.use(this.auth_path, authRouter);
         this.app.use(this.registet_path, registerRouter);
+
+        this.app.use(this.decolecta_path, decolectaRouter);
     }
 }
 
